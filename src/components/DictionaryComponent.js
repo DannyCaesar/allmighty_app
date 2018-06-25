@@ -1,13 +1,46 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+import axios from 'axios';
 
+import LineComponent from './LineComponent';
 
+const sampleData = {
+	id: "0",
+	english: "cat",
+	german: "die Katze",
+	russian: "кошка"
+}
 
 class DictionaryComponent extends Component {
 	
+	componentDidMount(){
+		axios.get('/api/words')
+		.then(response => {
+			const dataFetched = response.data;
+			dataFetched.forEach((item) => {
+				this.props.onAddNote(item)
+			})
+		})
+		.catch(error => {
+			console.log(error);
+		})
+	}
+
 	addNote = () => {
-		console.log('das');
+		const german = document.getElementById('german').value;
+		const english = document.getElementById('english').value;
+		const russian = document.getElementById('russian').value;
+
+		const data = {
+			english: english,
+			german: german,
+			russian: russian
+		}
+
+		axios.post('/api/words', data)
+		.catch(error => console.log(error))
+		this.props.onAddNote(data);
 	}
 
 	render(){
@@ -15,7 +48,28 @@ class DictionaryComponent extends Component {
 			<div>
 				<Link to="/">To home</Link>
 				<div className="dictBtn dictBtn_add" onClick={this.addNote}>+</div>
-				
+				<div>
+					<div>
+						<input type="text" placeholder="English word" id="english" />
+					</div>
+					<div>
+						<input type="text" placeholder="Deutsches Wort" id="german" />
+					</div>
+					<div>
+						<input type="text" placeholder="Русское слово" id="russian" />
+					</div>
+				</div>
+				<div className="container container__dict">
+					{ this.props.store.dictionary_notes.map((note, index) => 
+						<LineComponent 
+							key={`line${index}`}
+							id={`line${index}`}
+							english={note.english}
+							german={note.german}
+							russian={note.russian}
+						/>
+					)}
+				</div>
 			</div>
 		)
 	}

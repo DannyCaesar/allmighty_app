@@ -11,6 +11,7 @@ class RouterComponent extends Component {
 				<Switch>
 					<Route exact path="/" component={DictionaryComponent} />
 					<Route path="/dictionary" component={DictionaryComponent} />
+					<Route path="/home" component={App} />
 				</Switch>
 			</div>
 		)

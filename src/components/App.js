@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
 
 import '../css/app.scss';
 
 class App extends Component {
+
 	render(){
 		return (
 			<div className="component component__app">
@@ -15,4 +17,8 @@ class App extends Component {
 	}
 }
 
-export default App;
+export default connect(
+	state => ({
+		store: state
+	})
+)(App);
