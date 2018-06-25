@@ -1,3 +1,7 @@
+/*
+	NB: add animation crossbrowser
+*/
+
 //Colors
 $black: #000;
 $white: #fff;
@@ -9,4 +13,27 @@ $white: #fff;
 
 a {
 	text-decoration: none;
+}
+
+@mixin setBorderRadius($radius) {
+	-moz-border-radius: $radius; /* Firefox */
+  	-webkit-border-radius: $radius; /* Safari, Chrome */
+  	-khtml-border-radius: $radius; /* KHTML */
+  	border-radius: $radius; /* CSS3 */
+  	behavior: url(border-radius.htc); /* учим IE border-radius */
+}
+
+@mixin setBoxShadow($shadows...) {
+	-moz-box-shadow: $shadows;
+	-webkit-box-shadow: $shadows;
+	box-shadow: $shadows;
+}
+
+@mixin setBackground($width, $height, $url) {
+	display: block;
+	width: $width;
+	height: $height;
+	background-image: $url;
+	background-repeat: no-repeat;
+	background-size: $width $height;
 }
