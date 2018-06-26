@@ -5,7 +5,7 @@ const sampleData = {
 	russian: "кошка"
 }
 
-export function dictionary_notes(state = [sampleData], action) {
+export function dictionary_notes(state = [], action) {
 	switch (action.type) {
 		case 'ADD_NOTE':
 			return [...state, action.payload];
