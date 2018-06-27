@@ -8,7 +8,12 @@ const sampleData = {
 export function dictionary_notes(state = [], action) {
 	switch (action.type) {
 		case 'ADD_NOTE':
-			return [...state, action.payload];
+			let ids = [];
+			state.forEach((item) => ids.push(item._id));
+			if (!ids.includes(action.payload._id))
+				return [...state, action.payload];
+			else 
+				return state;
 		case 'REMOVE_NOTE': 
 			//let removedState = [...state];
 			const removedState = state.filter((note, index) => 

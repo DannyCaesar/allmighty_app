@@ -1,0 +1,118 @@
+@import 'global.scss';
+
+.btn__dict_container {
+	float: right;
+	margin: 0 5% 0 0;
+}
+
+.btn__dict {
+	background-color: $black;
+	color: $white;
+	line-height: 24px;
+	height: 40px;
+	width: 40px;
+	font-size: 16px;
+	@include border-radius(50%);
+}
+
+.btn__dict_settings {
+	@include transition(0.5s);
+	&:hover {
+		background-color: $grey;
+		color: $white;
+	}
+}
+
+.btn__dict_add {
+	margin: 0 5px 0 0;
+	@include transition(0.5s);
+	&:hover { 
+		background-color: $green;
+		color: $white;
+	}
+}
+
+.line-container {
+	margin-top: 20px;
+}
+
+.line__header {
+	text-align: center;
+	line-height: 50px;
+	vertical-align: middle;
+	color: $white;
+	display: block;
+	background-color: $black;
+	height: 50px;
+	font-size: 18px;
+	font-weight: bold;
+	@include border-radius(15px 15px 0 0);
+}
+
+.line__header_right {
+	border-right: 1px solid white;
+}
+
+.line__header_left {
+	border-left: 1px solid white;
+}
+
+.add-note-window {
+	margin-top: 20px;
+}
+
+.add-note-window__header {
+	text-align: center;
+	width: 100%;
+	height: 30px;
+	line-height: 30px;
+	font-size: 16px;
+	background-color: $pale-grey;
+	@include border-radius(15px 15px 0 0);
+	i {
+		cursor: pointer;
+		float: right;
+		margin: 5px 20px 0px 0;
+		&:hover {
+			color: $white;
+		}
+	}
+}
+
+.add-note-window__body {
+	border: 1px solid $pale-grey;
+	padding: 20px 0 0 0;
+	@include border-radius(0 0 15px 15px);
+}
+
+
+
+.add-note-window__block {
+	text-align: center;
+	input {
+		padding-left: 15px;
+		width: 80%;
+		border: 1px solid $pale-grey;
+		@include outline(none);
+		@include border-radius(5px);
+		&:focus {
+			box-shadow: 0 0 3pt 2pt $grey;
+		}
+	}
+}
+
+.add-note-window__btn {
+	display: block;
+	text-align: center;
+	margin: 0px 0 20px 0;
+}
+
+.btn__dict_check {
+	margin-top: 20px;
+	background-color: $grey;
+	@include transition(0.5s);
+	&:hover {
+		color: $white;
+		background-color: $green;
+	}
+}

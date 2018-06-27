@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import axios from 'axios';
 
 import LineComponent from './LineComponent';
-
+import '../css/dict.scss';
 
 class DictionaryComponent extends Component {
 	
@@ -29,7 +29,11 @@ class DictionaryComponent extends Component {
 	}
 
 	showAddWindow = () => {
-		this.setState({showAdd: !this.state.showAdd })
+		this.setState({ showAdd: !this.state.showAdd })
+	}
+
+	closeAddWindow = () => {
+		this.setState({ showAdd: false })
 	}
 
 	addNote = () => {
@@ -50,35 +54,54 @@ class DictionaryComponent extends Component {
 
 	render(){
 		return (
-			<div>
-				<Link to="/">To home</Link>
-				<div className="dictBtn dictBtn_add" onClick={this.showAddWindow}>+</div>
+			<div className="component">
+				<Link to="/"><div className="component__logo"></div></Link>
+				<div className="btn__dict_container">
+					<div className="btn btn__dict btn__dict_add" onClick={this.showAddWindow}><i className="fas fa-plus"></i></div>
+					<div className="btn btn__dict btn__dict_settings" onClick={this.showAddWindow}><i className="fas fa-ellipsis-h"></i></div>
+				</div>
+
 				{this.state.showAdd ? 
-				<div>
-					<div>
-						<input type="text" placeholder="English word" id="english" />
+				<div className="add-note-window col-xs-10 col-xs-offset-1">
+					<div className="add-note-window__header">Добавить запись <i className="fas fa-times" onClick={this.closeAddWindow}></i></div>
+					<div className="add-note-window__body">
+						<div className="col-xs-4 add-note-window__block">
+							<input type="text" placeholder="English word" id="english" />
+						</div>
+						<div className="col-xs-4 add-note-window__block">
+							<input type="text" placeholder="Deutsches Wort" id="german" />
+						</div>
+						<div className="col-xs-4 add-note-window__block">
+							<input type="text" placeholder="Русское слово" id="russian" />
+						</div>
+						<div className="add-note-window__btn">
+							<div className="btn btn__dict btn__dict_check" onClick={this.addNote}><i className="fas fa-check"></i></div>
+						</div>
 					</div>
-					<div>
-						<input type="text" placeholder="Deutsches Wort" id="german" />
-					</div>
-					<div>
-						<input type="text" placeholder="Русское слово" id="russian" />
-					</div>
-					<div className="dictBtn dictBtn_add" onClick={this.addNote}>+</div>
 				</div>
 				: null }
-				<div className="container container__dict">
-					{ this.props.store.dictionary_notes.map((note, index) => 
-						<LineComponent 
-							key={`line${index}`}
-							id={`line${index}`}
-							db_id={note._id}
-							english={note.english}
-							german={note.german}
-							russian={note.russian}
-						/>
-					)}
+
+				<div className="line-container col-xs-10 col-xs-offset-1">
+					<div className="col-xs-12">
+						<div className="line__header col-xs-12">
+							<div className="col-xs-4 line__header_right">English</div>
+							<div className="col-xs-4">Deutsch</div>
+							<div className="col-xs-4 line__header_left">Русский</div>
+						</div>
+					</div>
 				</div>
+				
+				{ this.props.store.dictionary_notes.map((note, index) => 
+					<LineComponent 
+						key={`line${index}`}
+						id={`line${index}`}
+						db_id={note._id}
+						english={note.english}
+						german={note.german}
+						russian={note.russian}
+					/>
+				)}
+
 			</div>
 		)
 	}

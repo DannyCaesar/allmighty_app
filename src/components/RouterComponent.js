@@ -9,7 +9,7 @@ class RouterComponent extends Component {
 		return(
 			<div> 
 				<Switch>
-					<Route exact path="/" component={DictionaryComponent} />
+					<Route exact path="/" component={App} />
 					<Route path="/dictionary" component={DictionaryComponent} />
 					<Route path="/home" component={App} />
 				</Switch>

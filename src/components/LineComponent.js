@@ -89,15 +89,16 @@ class LineComponent extends Component {
 
 	render(){
 		return (
-			<div className="component component__lineComponent">
-				<div className="component__lineComponent line">
+			<div className="component">
+				<div className="line">
+					<div className="col-xs-10 col-xs-offset-1">
 					{this.state.editEnglish ?
 						<div>
 							<div className="col-xs-2"><input type="text" placeholder="english" value={this.state.english} onChange={this.changeEnglish} /></div>
 							<div className="col-xs-1" onClick={this.submitEnglishChanges}>OK</div>
 						</div>
 					:
-						<div className="col-xs-3 col-md-3 line__block" id={`${this.props.id}english`} onDoubleClick={this.editEnglish}>{this.state.english}</div>
+						<div className="col-xs-4 col-md-4 line__block" id={`${this.props.id}english`} onDoubleClick={this.editEnglish}>{this.state.english}</div>
 					}
 
 					{this.state.editGerman ? 
@@ -106,7 +107,7 @@ class LineComponent extends Component {
 							<div className="col-xs-1" onClick={this.submitGermanChanges}>OK</div>
 						</div>
 					: 
-						<div className="col-xs-3 col-md-3 line__block" id={this.props.id+"german"} onDoubleClick={this.editGerman}>{this.state.german}</div>
+						<div className="col-xs-4 col-md-4 line__block" id={this.props.id+"german"} onDoubleClick={this.editGerman}>{this.state.german}</div>
 					}
 					
 					{this.state.editRussian ? 
@@ -115,17 +116,22 @@ class LineComponent extends Component {
 							<div className="col-xs-1" onClick={this.submitRussianChanges}>OK</div>
 						</div>
 					:
-						<div className="col-xs-3 col-md-3 line__block" id={this.props.id+"russian"} onDoubleClick={this.editRussian}>{this.state.russian}</div>
+						<div className="col-xs-4 col-md-4 line__block" id={this.props.id+"russian"} onDoubleClick={this.editRussian}>{this.state.russian}</div>
 					}
-					<div className="col-xs-1" onClick={this.remove}>Delete</div>
+					</div>
 
-					{!this.state.edit ?
-						<div className="col-xs-1" onClick={this.edit}>Edit</div>
-					:
-						<div className="col-xs-1" onClick={this.submitAllChanges}>OK</div>
-					}
+					<div className="col-xs-1">
+						{!this.state.edit ?
+							<div className="btn_line-edit col-xs-4" onClick={this.edit}><i className="fas fa-pen"></i></div>
+						:
+							<div className="btn_line-check col-xs-4" onClick={this.submitAllChanges}><i className="fas fa-check"></i></div>
+						}
 
-					<div className="col-xs-1">Advanced</div>
+						<div className="btn_line-remove col-xs-4" onClick={this.remove}><i className="fas fa-trash-alt"></i></div>
+
+						<div className="btn_line-settings col-xs-4"><i className="fas fa-cog"></i></div>
+					</div>
+
 				</div>
 			</div>
 		)

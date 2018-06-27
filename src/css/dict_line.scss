@@ -1,10 +1,37 @@
 @import 'global.scss';
 
 .line {
-	width: 100%;
 	text-align: center;
 }
 
-.line__block {
+.btn_line-edit {
+	color: $blue;
+	cursor: pointer;
+	&:hover {
+		color: lighten($blue, 10%);
+	}
+}
 
+.btn_line-check {
+	color: $green;
+	cursor: pointer;
+	&:hover {
+		color: lighten($green, 10%);
+	}
+}
+
+.btn_line-remove {
+	color: $red;
+	cursor: pointer;
+	&:hover {
+		color: lighten($red, 10%);
+	}
+}
+
+.btn_line-settings {
+	color: $grey;
+	cursor: pointer;
+	&:hover {
+		color: lighten($grey, 10%);
+	}
 }

@@ -29,7 +29,8 @@ module.exports = {
 				test: /\.(jpe?g|png|gif|mp3)$/i,
             	//include: SRC,
             	loaders: ['file-loader']
-			}
+			},
+			{ test: /\.(woff|woff2|eot|ttf|svg)$/, loader: 'url-loader?limit=100000' }
 		]
 	},
 	devServer: {

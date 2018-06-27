@@ -5,28 +5,57 @@
 //Colors
 $black: #000;
 $white: #fff;
+$blue: #7084fe;
+$red: #ff9696;
+$grey: #a0a0a0;
+$pale-grey: #d2d2d2;
+$orange: #ff9102;
+$pale-orange: #ffc880;
+$green: #00a65a;
+$pale-green: #b2e4cd;
+
+@font-face {
+	font-family: 'Century Gothic Regular';
+	src: url('fonts/CenturyGothic.eot');
+	src: url('fonts/CenturyGothic.eot?#iefix') format('embedded-opentype'),
+	url('fonts/CenturyGothic.woff') format('woff'),
+	url('fonts/CenturyGothic.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
 
 * {
 	margin: 0;
 	padding: 0;
+	font-family: 'Century Gothic Regular';
 }
 
 a {
 	text-decoration: none;
 }
 
-@mixin setBorderRadius($radius) {
+i {
+	vertical-align: middle;
+}
+
+@mixin border-radius($radius) {
 	-moz-border-radius: $radius; /* Firefox */
   	-webkit-border-radius: $radius; /* Safari, Chrome */
   	-khtml-border-radius: $radius; /* KHTML */
   	border-radius: $radius; /* CSS3 */
-  	behavior: url(border-radius.htc); /* учим IE border-radius */
 }
 
 @mixin setBoxShadow($shadows...) {
 	-moz-box-shadow: $shadows;
 	-webkit-box-shadow: $shadows;
 	box-shadow: $shadows;
+}
+
+@mixin transition($transtion...){
+	-webkit-transition: $transtion;
+    -moz-transition: $transtion;
+    -o-transition: $transtion;
+    transition: $transtion;
 }
 
 @mixin setBackground($width, $height, $url) {
@@ -36,6 +65,12 @@ a {
 	background-image: $url;
 	background-repeat: no-repeat;
 	background-size: $width $height;
+}
+
+@mixin outline($outline...) {
+	outline: $outline;
+	-moz-outline: $outline;
+	-webkit-outline: $outline;
 }
 
 div.row {
@@ -51,3 +86,30 @@ div.col-xs-1,div.col-xs-10,div.col-xs-11,div.col-xs-12,div.col-xs-2,div.col-xs-3
     padding-left: 0 !important;
     padding-right: 0 !important;
 }
+
+.component {
+	width: 100%;
+}
+
+.component__logo {
+	display: block;
+	margin: 40px auto;
+	border-radius: 50%;
+	@include setBackground(100px, 100px, url(../assets/logo.png));
+	&:hover {
+		@include setBoxShadow(0 0 20px rgba(0,0,0,1));
+		animation: pulse 1s infinite;
+		animation-delay: 1s;
+		@keyframes pulse {
+			0% { @include setBoxShadow(0 0 20px rgba(0,0,0,0.8)); }
+			50% { @include setBoxShadow(0 0 10px rgba(0,0,0,0.8)); }
+			100% { @include setBoxShadow(0 0 20px rgba(0,0,0,0.8)); }
+		}
+	}
+}
+
+.btn {
+	cursor: pointer;
+	text-align: center;
+}
+
