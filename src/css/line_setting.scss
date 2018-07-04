@@ -1,0 +1,31 @@
+@import 'global.scss';
+
+.line-setting-component {
+	margin: 20px 0 0px 0;
+	width: 100%;
+	background-color: $pale-grey;
+}
+
+.line-setting-component__header {
+	i, svg {
+		cursor: pointer;
+		float: right;
+		margin: 2px 5px 0 0;
+		&:hover {
+			color: $white;
+		}
+	}
+}
+
+.line_btn { 
+	cursor: pointer;
+	border: 2px solid $pale-grey;
+	@include transition(1s);
+	&:hover {
+		background-color: $white;
+	}
+	label {
+		cursor: pointer;
+		padding-right: 5px;
+	}
+}

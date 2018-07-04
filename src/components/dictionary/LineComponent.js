@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
 
-import '../css/dict_line.scss';
+import '../../css/dict_line.scss';
+
+import LineSettingComponent from './LineSettingComponent';
 
 class LineComponent extends Component {
 	
@@ -15,7 +17,8 @@ class LineComponent extends Component {
 			edit: false,
 			editEnglish: false,
 			editGerman: false,
-			editRussian: false
+			editRussian: false,
+			showSettings: false
 		}
 	}
 
@@ -87,37 +90,53 @@ class LineComponent extends Component {
 		.catch(error => console.log(error));
 	}
 
+	showSettings = () => {
+		this.setState({ showSettings: !this.state.showSettings })
+	}
+
+	close = (value) => {
+		this.setState({ showSettings: value })
+	}
+
 	render(){
 		return (
 			<div className="component">
 				<div className="line">
 					<div className="col-xs-10 col-xs-offset-1">
 					{this.state.editEnglish ?
-						<div>
-							<div className="col-xs-2"><input type="text" placeholder="english" value={this.state.english} onChange={this.changeEnglish} /></div>
-							<div className="col-xs-1" onClick={this.submitEnglishChanges}>OK</div>
+						<div className="line__item col-xs-4">
+							<div className="col-xs-11"><input type="text" placeholder="english" value={this.state.english} onChange={this.changeEnglish} /></div>
+							<div className="col-xs-1 btn_check" onClick={this.submitEnglishChanges}><i className="fas fa-check"></i></div>
 						</div>
 					:
 						<div className="col-xs-4 col-md-4 line__block" id={`${this.props.id}english`} onDoubleClick={this.editEnglish}>{this.state.english}</div>
 					}
 
 					{this.state.editGerman ? 
-						<div>
-							<div className="col-xs-2"><input type="text" placeholder="german" value={this.state.german} onChange={this.changeGerman} /></div>
-							<div className="col-xs-1" onClick={this.submitGermanChanges}>OK</div>
+						<div className="line__item col-xs-4">
+							<div className="col-xs-11"><input type="text" placeholder="german" value={this.state.german} onChange={this.changeGerman} /></div>
+							<div className="col-xs-1 btn_check" onClick={this.submitGermanChanges}><i className="fas fa-check"></i></div>
 						</div>
 					: 
 						<div className="col-xs-4 col-md-4 line__block" id={this.props.id+"german"} onDoubleClick={this.editGerman}>{this.state.german}</div>
 					}
 					
 					{this.state.editRussian ? 
-						<div>
-							<div className="col-xs-2"><input type="text" placeholder="russian" value={this.state.russian} onChange={this.changeRussian} /></div>
-							<div className="col-xs-1" onClick={this.submitRussianChanges}>OK</div>
+						<div className="line__item col-xs-4">
+							<div className="col-xs-11"><input type="text" placeholder="russian" value={this.state.russian} onChange={this.changeRussian} /></div>
+							<div className="col-xs-1 btn_check" onClick={this.submitRussianChanges}><i className="fas fa-check"></i></div>
 						</div>
 					:
 						<div className="col-xs-4 col-md-4 line__block" id={this.props.id+"russian"} onDoubleClick={this.editRussian}>{this.state.russian}</div>
 					}
+
+					{this.state.showSettings ? 
+						<LineSettingComponent 
+							db_id={this.props.db_id}
+							important={this.props.important}
+							onClose={this.close}
+						/>
+					: null }
 					</div>
 
 					<div className="col-xs-1">
@@ -129,7 +148,7 @@ class LineComponent extends Component {
 
 						<div className="btn_line-remove col-xs-4" onClick={this.remove}><i className="fas fa-trash-alt"></i></div>
 
-						<div className="btn_line-settings col-xs-4"><i className="fas fa-cog"></i></div>
+						<div className="btn_line-settings col-xs-4" onClick={this.showSettings}><i className="fas fa-cog"></i></div>
 					</div>
 
 				</div>

@@ -62,10 +62,20 @@ app.patch('/api/words', (req, res) => {
 })
 
 app.post('/api/words/edit/:id', (req, res) => {
-	mongoClient.connect(process.env.MONGO_PORT_DEV, (err, client) => {
-		client.db("test_db").collection("words").update({"_id": objectId(req.params.id)}, {"english": req.body.english, "german": req.body.german, "russian": req.body.russian });
-		client.close();
-	})
+	console.log(req.body);
+	if (req.body.english!==undefined&&req.body.german!==undefined&&req.body.russian!==undefined) {
+		mongoClient.connect(process.env.MONGO_PORT_DEV, (err, client) => {
+			client.db("test_db").collection("words").update({"_id": objectId(req.params.id)}, {"english": req.body.english, "german": req.body.german, "russian": req.body.russian, "important": false });
+			client.close();
+		})
+	}
+
+	if (req.body.important!==undefined) {
+		mongoClient.connect(process.env.MONGO_PORT_DEV, (err, client) => {
+			client.db("test_db").collection("words").update({"_id": objectId(req.params.id)}, { $set: {"important": req.body.important } });
+			client.close();
+		})
+	}
 })
 	
 

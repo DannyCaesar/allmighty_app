@@ -4,6 +4,12 @@
 	text-align: center;
 }
 
+.line__item {
+	input {
+		width: 90%;
+	}
+}
+
 .btn_line-edit {
 	color: $blue;
 	cursor: pointer;
@@ -33,5 +39,13 @@
 	cursor: pointer;
 	&:hover {
 		color: lighten($grey, 10%);
+	}
+}
+
+.btn_check {
+	cursor: pointer;
+	color: $green;
+	&:hover {
+		color: lighten($green, 10%);
 	}
 }

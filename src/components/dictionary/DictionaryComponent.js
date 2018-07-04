@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import axios from 'axios';
 
 import LineComponent from './LineComponent';
-import '../css/dict.scss';
+import '../../css/dict.scss';
 
 class DictionaryComponent extends Component {
 	
@@ -99,6 +99,7 @@ class DictionaryComponent extends Component {
 						english={note.english}
 						german={note.german}
 						russian={note.russian}
+						important={note.important}
 					/>
 				)}
 
