@@ -13,7 +13,7 @@ class DictionaryComponent extends Component {
 		super(props);
 		this.state = {
 			showAdd: false,
-			showSettings: true
+			showSettings: false
 		}
 	}
 
@@ -43,8 +43,8 @@ class DictionaryComponent extends Component {
 		this.setState({ showAdd: false })
 	}
 
-	closeSettingsWindow = () => {
-		this.setState({ showSettings: false })
+	closeSettingsWindow = (value) => {
+		this.setState({ showSettings: value })
 	}
 
 	addNote = () => {
@@ -55,7 +55,9 @@ class DictionaryComponent extends Component {
 		const data = {
 			english: english,
 			german: german,
-			russian: russian
+			russian: russian,
+			dateAdd: new Date(),
+			important: false
 		}
 
 		axios.post('/api/words', data)
@@ -93,7 +95,9 @@ class DictionaryComponent extends Component {
 				: null }
 
 				{this.state.showSettings ?
-					<SettingsComponent />
+					<SettingsComponent 
+						onClose={this.closeSettingsWindow}
+					/>
 				: null }
 
 				<div className="line-container col-xs-10 col-xs-offset-1">

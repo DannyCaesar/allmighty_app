@@ -52,6 +52,10 @@ class SettingsComponent extends Component {
 		this.props.onHideElements(document.getElementById('hideElements').checked);
 	}
 
+	closeSettingsWindow = () => {
+		this.props.onClose(false);
+	}
+
 	render(){
 		return (
 			<div className="setting-window col-xs-10 col-xs-offset-1">

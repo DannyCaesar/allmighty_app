@@ -9,6 +9,13 @@
 .line__item {
 	input {
 		width: 90%;
+		text-align: center;
+		border: 1px solid $pale-grey;
+		@include border-radius(10px);
+		@include outline(none);
+		&:focus {
+			box-shadow: 0 0 3pt 2pt $grey;
+		}
 	}
 }
 
@@ -31,6 +38,9 @@
 
 .line__status {
 	color: $red;
+	&:hover {
+		cursor: pointer;
+	}
 }
 
 .line__status_pale {

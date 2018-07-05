@@ -63,6 +63,13 @@ app.patch('/api/words', (req, res) => {
 
 })
 
+app.delete('/api/delete/:id', (req, res) => {
+	mongoClient.connect(process.env.MONGO_PORT_DEV, (err, client) => {
+		client.db("test_db").collection("words").removeOne({"_id": objectId(req.params.id)});
+		client.close();
+	})
+})
+
 app.post('/api/words/edit/:id', (req, res) => {
 	if (req.body.english!==undefined&&req.body.german!==undefined&&req.body.russian!==undefined) {
 		mongoClient.connect(process.env.MONGO_PORT_DEV, (err, client) => {

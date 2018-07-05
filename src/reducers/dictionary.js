@@ -15,9 +15,8 @@ export function dictionary_notes(state = [], action) {
 			else 
 				return state;
 		case 'REMOVE_NOTE': 
-			//let removedState = [...state];
 			const removedState = state.filter((note, index) => 
-				note.english !== action.payload.english&&note.german !== action.payload.german&&note.russian !== action.payload.russian
+				note._id !== action.payload
 			)
 			return removedState;
 		case 'UPDATE_NOTE':

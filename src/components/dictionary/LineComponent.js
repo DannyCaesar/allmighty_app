@@ -37,10 +37,10 @@ class LineComponent extends Component {
 			russian: this.state.russian
 		}
 
-		axios.patch('/api/words',data)
+		axios.delete('/api/delete/'+this.props.db_id)
 		.catch(error => console.log(error));
 		
-		this.props.onRemoveNote(data);
+		this.props.onRemoveNote(this.props.db_id);
 	}
 
 	edit = () => {
@@ -73,6 +73,22 @@ class LineComponent extends Component {
 		this.setState({ editRussian: false });
 	}
 
+	keySubmitEnglishChanges = (e) => {
+		if (e.keyCode === 13 || e.keyCode === 27)
+			this.submitEnglishChanges();
+	}
+
+	keySubmitGermanChanges = (e) => {
+		if (e.keyCode === 13 || e.keyCode === 27)
+			this.submitGermanChanges();
+	}
+
+	keySubmitRussianChanges = (e) => {
+		if (e.keyCode === 13 || e.keyCode === 27)
+			this.submitRussianChanges();
+	}
+
+
 	submitAllChanges = () => {
 		this.submitChanges();
 		this.setState({ edit: false });
@@ -104,20 +120,36 @@ class LineComponent extends Component {
 		this.setState({ important: value })
 	}
 
+	unimportant = () => {
+		this.setState({ important: false })
+		this.props.onNoteUpdate({id: this.props.db_id, important: false });
+
+		axios.post('/api/words/edit/'+this.props.db_id, {important: false })
+		.catch(error => console.log('error'));	
+	}
+
+	important = () => {
+		this.setState({ important: true })
+		this.props.onNoteUpdate({id: this.props.db_id, important: true });
+
+		axios.post('/api/words/edit/'+this.props.db_id, {important: true })
+		.catch(error => console.log('error'));	
+	}
+
 	render(){
 		if (this.state.important) {
 			return (
 				<div className="component">
 					<div className="line col-xs-12">
 
-						<div className="col-xs-1 line__status">
+						<div className="col-xs-1 line__status" onClick={this.unimportant}>
 							<span><i className="fas fa-exclamation"></i></span>
 						</div>
 
 						<div className="col-xs-10 line__element line_important">
 						{this.state.editEnglish ?
 							<div className="line__item col-xs-4">
-								<div className="col-xs-11"><input type="text" placeholder="english" value={this.state.english} onChange={this.changeEnglish} /></div>
+								<div className="col-xs-11"><input type="text" placeholder="english" value={this.state.english} onChange={this.changeEnglish} onKeyDown={this.keySubmitEnglishChanges} /></div>
 								<div className="col-xs-1 btn_check" onClick={this.submitEnglishChanges}><i className="fas fa-check"></i></div>
 							</div>
 						:
@@ -126,7 +158,7 @@ class LineComponent extends Component {
 
 						{this.state.editGerman ? 
 							<div className="line__item col-xs-4">
-								<div className="col-xs-11"><input type="text" placeholder="german" value={this.state.german} onChange={this.changeGerman} /></div>
+								<div className="col-xs-11"><input type="text" placeholder="german" value={this.state.german} onChange={this.changeGerman} onKeyDown={this.keySubmitGermanChanges} /></div>
 								<div className="col-xs-1 btn_check" onClick={this.submitGermanChanges}><i className="fas fa-check"></i></div>
 							</div>
 						: 
@@ -135,7 +167,7 @@ class LineComponent extends Component {
 						
 						{this.state.editRussian ? 
 							<div className="line__item col-xs-4">
-								<div className="col-xs-11"><input type="text" placeholder="russian" value={this.state.russian} onChange={this.changeRussian} /></div>
+								<div className="col-xs-11"><input type="text" placeholder="russian" value={this.state.russian} onChange={this.changeRussian} onKeyDown={this.keySubmitRussianChanges} /></div>
 								<div className="col-xs-1 btn_check" onClick={this.submitRussianChanges}><i className="fas fa-check"></i></div>
 							</div>
 						:
@@ -175,14 +207,14 @@ class LineComponent extends Component {
 			
 					<div className="line col-xs-12">
 
-						<div className="col-xs-1 line__status_pale">
+						<div className="col-xs-1 line__status_pale" onClick={this.important}>
 							<span><i className="fas fa-exclamation"></i></span>
 						</div>
 
 						<div className="col-xs-10 line__element">
 						{this.state.editEnglish ?
 							<div className="line__item col-xs-4">
-								<div className="col-xs-11"><input type="text" placeholder="english" value={this.state.english} onChange={this.changeEnglish} /></div>
+								<div className="col-xs-11"><input type="text" placeholder="english" value={this.state.english} onChange={this.changeEnglish} onKeyDown={this.keySubmitEnglishChanges} /></div>
 								<div className="col-xs-1 btn_check" onClick={this.submitEnglishChanges}><i className="fas fa-check"></i></div>
 							</div>
 						:
@@ -191,7 +223,7 @@ class LineComponent extends Component {
 
 						{this.state.editGerman ? 
 							<div className="line__item col-xs-4">
-								<div className="col-xs-11"><input type="text" placeholder="german" value={this.state.german} onChange={this.changeGerman} /></div>
+								<div className="col-xs-11"><input type="text" placeholder="german" value={this.state.german} onChange={this.changeGerman} onKeyDown={this.keySubmitGermanChanges} /></div>
 								<div className="col-xs-1 btn_check" onClick={this.submitGermanChanges}><i className="fas fa-check"></i></div>
 							</div>
 						: 
@@ -200,7 +232,7 @@ class LineComponent extends Component {
 						
 						{this.state.editRussian ? 
 							<div className="line__item col-xs-4">
-								<div className="col-xs-11"><input type="text" placeholder="russian" value={this.state.russian} onChange={this.changeRussian} /></div>
+								<div className="col-xs-11"><input type="text" placeholder="russian" value={this.state.russian} onChange={this.changeRussian} onKeyDown={this.keySubmitRussianChanges} /></div>
 								<div className="col-xs-1 btn_check" onClick={this.submitRussianChanges}><i className="fas fa-check"></i></div>
 							</div>
 						:
@@ -244,6 +276,9 @@ export default connect(
 	dispatch => ({
 		onRemoveNote: (note) => {
 			dispatch({ type: "REMOVE_NOTE", payload: note });
+		},
+		onNoteUpdate: (note) => {
+			dispatch({ type: "UPDATE_NOTE", payload: note });
 		}
 	})
 )(LineComponent);
