@@ -1,9 +1,9 @@
 @import 'global.scss';
 
 .line-setting-component {
-	margin: 20px 0 0px 0;
+	margin: 30px 0 0px 0;
 	width: 100%;
-	background-color: $pale-grey;
+	background-color: $pale-green;
 }
 
 .line-setting-component__header {
@@ -17,9 +17,9 @@
 	}
 }
 
-.line_btn { 
+.line__btn { 
 	cursor: pointer;
-	border: 2px solid $pale-grey;
+	border: 2px solid $pale-green;
 	@include transition(1s);
 	&:hover {
 		background-color: $white;
@@ -28,4 +28,15 @@
 		cursor: pointer;
 		padding-right: 5px;
 	}
+}
+
+.line__btn_unimportant {
+	background-color: $white;
+	&:hover {
+		background-color: $pale-orange;
+	}
+}
+
+.line__btn_important {
+	background-color: $pale-orange;
 }

@@ -14,6 +14,7 @@ class LineComponent extends Component {
 			english: '',
 			german: '',
 			russian: '',
+			important: false,
 			edit: false,
 			editEnglish: false,
 			editGerman: false,
@@ -26,6 +27,7 @@ class LineComponent extends Component {
 		this.setState({ english: this.props.english });
 		this.setState({ german: this.props.german });
 		this.setState({ russian: this.props.russian });
+		this.setState({ important: this.props.important });
 	}
 
 	remove = () => {
@@ -98,62 +100,140 @@ class LineComponent extends Component {
 		this.setState({ showSettings: value })
 	}
 
+	setImportance = (value) => {
+		this.setState({ important: value })
+	}
+
 	render(){
-		return (
-			<div className="component">
-				<div className="line">
-					<div className="col-xs-10 col-xs-offset-1">
-					{this.state.editEnglish ?
-						<div className="line__item col-xs-4">
-							<div className="col-xs-11"><input type="text" placeholder="english" value={this.state.english} onChange={this.changeEnglish} /></div>
-							<div className="col-xs-1 btn_check" onClick={this.submitEnglishChanges}><i className="fas fa-check"></i></div>
-						</div>
-					:
-						<div className="col-xs-4 col-md-4 line__block" id={`${this.props.id}english`} onDoubleClick={this.editEnglish}>{this.state.english}</div>
-					}
+		if (this.state.important) {
+			return (
+				<div className="component">
+					<div className="line col-xs-12">
 
-					{this.state.editGerman ? 
-						<div className="line__item col-xs-4">
-							<div className="col-xs-11"><input type="text" placeholder="german" value={this.state.german} onChange={this.changeGerman} /></div>
-							<div className="col-xs-1 btn_check" onClick={this.submitGermanChanges}><i className="fas fa-check"></i></div>
+						<div className="col-xs-1 line__status">
+							<span><i className="fas fa-exclamation"></i></span>
 						</div>
-					: 
-						<div className="col-xs-4 col-md-4 line__block" id={this.props.id+"german"} onDoubleClick={this.editGerman}>{this.state.german}</div>
-					}
-					
-					{this.state.editRussian ? 
-						<div className="line__item col-xs-4">
-							<div className="col-xs-11"><input type="text" placeholder="russian" value={this.state.russian} onChange={this.changeRussian} /></div>
-							<div className="col-xs-1 btn_check" onClick={this.submitRussianChanges}><i className="fas fa-check"></i></div>
-						</div>
-					:
-						<div className="col-xs-4 col-md-4 line__block" id={this.props.id+"russian"} onDoubleClick={this.editRussian}>{this.state.russian}</div>
-					}
 
-					{this.state.showSettings ? 
-						<LineSettingComponent 
-							db_id={this.props.db_id}
-							important={this.props.important}
-							onClose={this.close}
-						/>
-					: null }
-					</div>
-
-					<div className="col-xs-1">
-						{!this.state.edit ?
-							<div className="btn_line-edit col-xs-4" onClick={this.edit}><i className="fas fa-pen"></i></div>
+						<div className="col-xs-10 line__element line_important">
+						{this.state.editEnglish ?
+							<div className="line__item col-xs-4">
+								<div className="col-xs-11"><input type="text" placeholder="english" value={this.state.english} onChange={this.changeEnglish} /></div>
+								<div className="col-xs-1 btn_check" onClick={this.submitEnglishChanges}><i className="fas fa-check"></i></div>
+							</div>
 						:
-							<div className="btn_line-check col-xs-4" onClick={this.submitAllChanges}><i className="fas fa-check"></i></div>
+							<div className="col-xs-4 col-md-4 line__block" id={`${this.props.id}english`} onDoubleClick={this.editEnglish}>{this.state.english}</div>
 						}
 
-						<div className="btn_line-remove col-xs-4" onClick={this.remove}><i className="fas fa-trash-alt"></i></div>
+						{this.state.editGerman ? 
+							<div className="line__item col-xs-4">
+								<div className="col-xs-11"><input type="text" placeholder="german" value={this.state.german} onChange={this.changeGerman} /></div>
+								<div className="col-xs-1 btn_check" onClick={this.submitGermanChanges}><i className="fas fa-check"></i></div>
+							</div>
+						: 
+							<div className="col-xs-4 col-md-4 line__block" id={this.props.id+"german"} onDoubleClick={this.editGerman}>{this.state.german}</div>
+						}
+						
+						{this.state.editRussian ? 
+							<div className="line__item col-xs-4">
+								<div className="col-xs-11"><input type="text" placeholder="russian" value={this.state.russian} onChange={this.changeRussian} /></div>
+								<div className="col-xs-1 btn_check" onClick={this.submitRussianChanges}><i className="fas fa-check"></i></div>
+							</div>
+						:
+							<div className="col-xs-4 col-md-4 line__block" id={this.props.id+"russian"} onDoubleClick={this.editRussian}>{this.state.russian}</div>
+						}
 
-						<div className="btn_line-settings col-xs-4" onClick={this.showSettings}><i className="fas fa-cog"></i></div>
+						{this.state.showSettings ? 
+							<LineSettingComponent 
+								db_id={this.props.db_id}
+								important={this.props.important}
+								onClose={this.close}
+								onSetImportance={this.setImportance}
+							/>
+						: null }
+						</div>
+
+						{!this.props.store.dictionary_elements_show ? 
+						<div className="col-xs-1">
+							{!this.state.edit ?
+								<div className="btn_line-edit col-xs-4" onClick={this.edit}><i className="fas fa-pen"></i></div>
+							:
+								<div className="btn_line-check col-xs-4" onClick={this.submitAllChanges}><i className="fas fa-check"></i></div>
+							}
+
+							<div className="btn_line-remove col-xs-4" onClick={this.remove}><i className="fas fa-trash-alt"></i></div>
+
+							<div className="btn_line-settings col-xs-4" onClick={this.showSettings}><i className="fas fa-cog"></i></div>
+						</div>
+						: null}
+
 					</div>
-
 				</div>
-			</div>
-		)
+			)
+
+		} else {
+			return (
+			
+					<div className="line col-xs-12">
+
+						<div className="col-xs-1 line__status_pale">
+							<span><i className="fas fa-exclamation"></i></span>
+						</div>
+
+						<div className="col-xs-10 line__element">
+						{this.state.editEnglish ?
+							<div className="line__item col-xs-4">
+								<div className="col-xs-11"><input type="text" placeholder="english" value={this.state.english} onChange={this.changeEnglish} /></div>
+								<div className="col-xs-1 btn_check" onClick={this.submitEnglishChanges}><i className="fas fa-check"></i></div>
+							</div>
+						:
+							<div className="col-xs-4 col-md-4 line__block" id={`${this.props.id}english`} onDoubleClick={this.editEnglish}>{this.state.english}</div>
+						}
+
+						{this.state.editGerman ? 
+							<div className="line__item col-xs-4">
+								<div className="col-xs-11"><input type="text" placeholder="german" value={this.state.german} onChange={this.changeGerman} /></div>
+								<div className="col-xs-1 btn_check" onClick={this.submitGermanChanges}><i className="fas fa-check"></i></div>
+							</div>
+						: 
+							<div className="col-xs-4 col-md-4 line__block" id={this.props.id+"german"} onDoubleClick={this.editGerman}>{this.state.german}</div>
+						}
+						
+						{this.state.editRussian ? 
+							<div className="line__item col-xs-4">
+								<div className="col-xs-11"><input type="text" placeholder="russian" value={this.state.russian} onChange={this.changeRussian} /></div>
+								<div className="col-xs-1 btn_check" onClick={this.submitRussianChanges}><i className="fas fa-check"></i></div>
+							</div>
+						:
+							<div className="col-xs-4 col-md-4 line__block" id={this.props.id+"russian"} onDoubleClick={this.editRussian}>{this.state.russian}</div>
+						}
+
+						{this.state.showSettings ? 
+							<LineSettingComponent 
+								db_id={this.props.db_id}
+								important={this.props.important}
+								onClose={this.close}
+								onSetImportance={this.setImportance}
+							/>
+						: null }
+						</div>
+
+						{!this.props.store.dictionary_elements_show ? 
+						<div className="col-xs-1">
+							{!this.state.edit ?
+								<div className="btn_line-edit col-xs-4" onClick={this.edit}><i className="fas fa-pen"></i></div>
+							:
+								<div className="btn_line-check col-xs-4" onClick={this.submitAllChanges}><i className="fas fa-check"></i></div>
+							}
+
+							<div className="btn_line-remove col-xs-4" onClick={this.remove}><i className="fas fa-trash-alt"></i></div>
+
+							<div className="btn_line-settings col-xs-4" onClick={this.showSettings}><i className="fas fa-cog"></i></div>
+						</div>
+						: null }
+					</div>
+				
+			)
+		}
 	}
 }
 

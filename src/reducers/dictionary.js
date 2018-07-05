@@ -35,3 +35,12 @@ export function dictionary_notes(state = [], action) {
 			return state;
 	}
 }
+
+export function dictionary_elements_show(state = false, action){
+	switch (action.type) {
+		case 'HIDE_ELEMENTS':
+			return action.payload;
+		default:
+			return state;
+	}
+}

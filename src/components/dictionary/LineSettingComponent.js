@@ -13,27 +13,18 @@ class LineSettingComponent extends Component {
 		}
 	}
 
-	componentDidMount(){
-		const checkbox = document.getElementById(`check${this.props.db_id}`);
-		const elem = this.props.store.dictionary_notes.filter((note) => 
-			note._id === this.props.db_id
-		)[0];
-		checkbox.checked = elem.important;
-	}
-
 	shouldComponentUpdate(nextProps, nextState){
 		return this.state.importance !== nextState.importance || this.props.important !== nextProps.important;
 	}
 
 	importanceCheck = () => {
-		const checkbox = document.getElementById(`check${this.props.db_id}`);
 		this.setState({ importance: !this.state.importance });
-		checkbox.checked = !this.state.importance;
+		this.props.onNoteUpdate({id: this.props.db_id, important: !this.state.importance });
+
+		this.props.onSetImportance(!this.state.importance);
 
 		axios.post('/api/words/edit/'+this.props.db_id, {important: !this.state.importance})
-		.catch(error => console.log('error'));
-
-		this.props.onNoteUpdate({id: this.props.db_id, important: this.state.importance });
+		.catch(error => console.log('error'));	
 	}
 
 	close = () => {
@@ -45,10 +36,15 @@ class LineSettingComponent extends Component {
 			<div className="line-setting-component">
 				<div className="line-setting-component__header">Дополнительные настройки <i className="fas fa-times" onClick={this.close}></i></div>
 				<div className="line-setting-component__body">
-					<div className="line_btn line_btn__importance" onClick={this.importanceCheck}>
-						<label>Отметить, как важное</label>
-						<input type="checkbox" id={`check${this.props.db_id}`}/>
-					</div>
+					{!this.state.importance ? 
+						<div className="line__btn line__btn_unimportant" onClick={this.importanceCheck}>
+							Пометить, как важное
+						</div>
+					: 
+						<div className="line__btn line__btn_important" onClick={this.importanceCheck}>
+							Пометить, как неважное
+						</div>
+					}
 				</div>
 			</div>
 		)

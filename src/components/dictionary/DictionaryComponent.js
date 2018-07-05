@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import axios from 'axios';
 
 import LineComponent from './LineComponent';
+import SettingsComponent from './SettingsComponent';
 import '../../css/dict.scss';
 
 class DictionaryComponent extends Component {
@@ -11,7 +12,8 @@ class DictionaryComponent extends Component {
 	constructor(props){
 		super(props);
 		this.state = {
-			showAdd: false
+			showAdd: false,
+			showSettings: true
 		}
 	}
 
@@ -28,12 +30,21 @@ class DictionaryComponent extends Component {
 		})
 	}
 
+
 	showAddWindow = () => {
 		this.setState({ showAdd: !this.state.showAdd })
 	}
 
+	showSettingsWindow = () => {
+		this.setState({ showSettings: !this.state.showSettings })
+	}
+
 	closeAddWindow = () => {
 		this.setState({ showAdd: false })
+	}
+
+	closeSettingsWindow = () => {
+		this.setState({ showSettings: false })
 	}
 
 	addNote = () => {
@@ -58,7 +69,7 @@ class DictionaryComponent extends Component {
 				<Link to="/"><div className="component__logo"></div></Link>
 				<div className="btn__dict_container">
 					<div className="btn btn__dict btn__dict_add" onClick={this.showAddWindow}><i className="fas fa-plus"></i></div>
-					<div className="btn btn__dict btn__dict_settings" onClick={this.showAddWindow}><i className="fas fa-ellipsis-h"></i></div>
+					<div className="btn btn__dict btn__dict_settings" onClick={this.showSettingsWindow}><i className="fas fa-ellipsis-h"></i></div>
 				</div>
 
 				{this.state.showAdd ? 
@@ -79,6 +90,10 @@ class DictionaryComponent extends Component {
 						</div>
 					</div>
 				</div>
+				: null }
+
+				{this.state.showSettings ?
+					<SettingsComponent />
 				: null }
 
 				<div className="line-container col-xs-10 col-xs-offset-1">

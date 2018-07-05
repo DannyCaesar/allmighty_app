@@ -3,13 +3,15 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const mongoClient = require('mongodb').MongoClient;
 const objectId = require('mongodb').ObjectID;
+const fs = require('fs');
 require('dotenv').load();
 
 const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, '../build')));
+
 
 const sampleData = {
 	id: "0",
@@ -48,7 +50,7 @@ app.get('/api/words', (req, res) => {
 
 app.post('/api/words', (req, res) => {
 	mongoClient.connect(process.env.MONGO_PORT_DEV, (err, client) => {
-		client.db("test_db").collection("words").insertOne(req.body);
+		client.db("test_db").collection("words").insert(req.body);
 		client.close();
 	})
 })
@@ -62,10 +64,9 @@ app.patch('/api/words', (req, res) => {
 })
 
 app.post('/api/words/edit/:id', (req, res) => {
-	console.log(req.body);
 	if (req.body.english!==undefined&&req.body.german!==undefined&&req.body.russian!==undefined) {
 		mongoClient.connect(process.env.MONGO_PORT_DEV, (err, client) => {
-			client.db("test_db").collection("words").update({"_id": objectId(req.params.id)}, {"english": req.body.english, "german": req.body.german, "russian": req.body.russian, "important": false });
+			client.db("test_db").collection("words").update({"_id": objectId(req.params.id)}, { $set: {"english": req.body.english, "german": req.body.german, "russian": req.body.russian } });
 			client.close();
 		})
 	}
@@ -78,6 +79,19 @@ app.post('/api/words/edit/:id', (req, res) => {
 	}
 })
 	
+app.post('/api/loadWords', (req, res) => {
+	mongoClient.connect(process.env.MONGO_PORT_DEV, (err, client) => {
+			client.db("test_db").collection("words").find({}).toArray((err,words) => {
+				fs.writeFile(req.body.url+'words.json',JSON.stringify(words),'utf8',(err)=> {
+					if (err) return console.log(err);
+					res.send('Файл сохранен');
+					console.log('The file was saved');
+				});
+				client.close();
+		})
+	})
+})
+
 
 app.listen(process.env.SERVER_PORT_DEV, (error) => {
 	if (error) console.log('Error: ' + error);

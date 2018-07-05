@@ -2,6 +2,8 @@
 
 .line {
 	text-align: center;
+	//height: 30px;
+	line-height: 30px;
 }
 
 .line__item {
@@ -9,6 +11,36 @@
 		width: 90%;
 	}
 }
+
+.line__element {
+	&:hover {
+		background-color: $pale-grey;
+	}
+}
+
+.line__block {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 30px;
+}
+
+.line_important {
+	background-color: $pale-orange;
+}
+
+.line__status {
+	color: $red;
+}
+
+.line__status_pale {
+	color: $white;
+	&:hover {
+		cursor: pointer;
+		color: $grey;
+	}
+}
+
 
 .btn_line-edit {
 	color: $blue;

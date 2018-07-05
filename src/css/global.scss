@@ -39,10 +39,10 @@ i {
 }
 
 @mixin border-radius($radius) {
-	-moz-border-radius: $radius; /* Firefox */
-  	-webkit-border-radius: $radius; /* Safari, Chrome */
-  	-khtml-border-radius: $radius; /* KHTML */
-  	border-radius: $radius; /* CSS3 */
+	-moz-border-radius: $radius; // Firefox 
+  	-webkit-border-radius: $radius; // Safari, Chrome 
+  	-khtml-border-radius: $radius; // KHTML 
+  	border-radius: $radius; // CSS3 
 }
 
 @mixin setBoxShadow($shadows...) {

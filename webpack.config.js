@@ -46,5 +46,8 @@ module.exports = {
 			template: './src/index.html'
 		}),
 		new ExtractTextPlugin("styles.css")
-	]
+	],
+	node: {
+		fs: 'empty'
+	}
 }
