@@ -88,15 +88,22 @@ app.post('/api/words/edit/:id', (req, res) => {
 	
 app.post('/api/loadWords', (req, res) => {
 	mongoClient.connect(process.env.MONGO_PORT_DEV, (err, client) => {
-			client.db("test_db").collection("words").find({}).toArray((err,words) => {
-				fs.writeFile(req.body.url+'words.json',JSON.stringify(words),'utf8',(err)=> {
+			client.db("test_db").collection("words").find({},{ fields: {_id: 0} }).toArray((err,words) => {
+				console.log(words);
+				fs.writeFile(req.body.url+'json/words.json',JSON.stringify(words),'utf8',(err)=> {
 					if (err) return console.log(err);
-					res.send('Файл сохранен');
-					console.log('The file was saved');
+					console.log('The file words.json was saved');
 				});
+			})
+			client.db("test_db").collection("groups").find({},{ fields: {_id: 0} }).toArray((err,words) => {
+				fs.writeFile(req.body.url+'json/groups.json',JSON.stringify(words),'utf8',(err)=> {
+					if (err) return console.log(err);
+					console.log('The file groups.json was saved');
+				});
+			})
+				res.send('Файлы сохранены');
 				client.close();
 		})
-	})
 })
 
 

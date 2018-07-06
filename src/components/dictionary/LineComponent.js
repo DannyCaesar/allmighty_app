@@ -44,6 +44,7 @@ class LineComponent extends Component {
 	}
 
 	edit = () => {
+		//console.log(window.innerWidth);
 		this.setState({ edit: true });
 		this.setState({ editEnglish: true});
 		this.setState({ editGerman: true });

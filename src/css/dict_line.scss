@@ -27,9 +27,13 @@
 
 .line__block {
 	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
+	overflow: auto;
+	//text-overflow: ellipsis;
 	height: 30px;
+
+	&::-webkit-scrollbar {
+	    height: 0px;
+	}
 }
 
 .line_important {
