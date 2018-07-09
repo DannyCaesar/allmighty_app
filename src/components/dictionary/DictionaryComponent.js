@@ -67,7 +67,10 @@ class DictionaryComponent extends Component {
 			german: german,
 			russian: russian,
 			dateAdd: new Date(),
-			important: false
+			important: false,
+			forms: [],
+			groups: [],
+			comments: ''
 		}
 
 		axios.post('/api/words', data)

@@ -1,5 +1,6 @@
 @import 'global.scss';
 
+$setting-height: 30px;
 
 .setting-window {
 	margin-top: 20px;
@@ -55,6 +56,8 @@
 }
 
 .block-upload {
+	height: $setting-height;
+	line-height: $setting-height;
 	input {
 		border: 2px solid $pale-grey;
 		@include border-radius(5px);
@@ -64,7 +67,7 @@
 		}
 	}
 	i, svg {
-		line-height: 20px;
+		line-height: $setting-height;
 		cursor: pointer;
 		&:hover {
 			color: $grey;
@@ -86,13 +89,11 @@
 	}
 }
 
-.setting-edit-window {
-	margin-top: 15px;
-}
 
 .setting-edit-window__select {
-	height: 35px;
-	line-height: 35px;
+	height: $setting-height;
+	line-height: $setting-height;
+	margin: 0 0 15px 0;
 }
 
 .setting-edit-window__label {
@@ -102,5 +103,65 @@
 
 .setting-edit-window__selector {
 	width: 90%;
-	height: 35px;
+	height: $setting-height;
+	padding: 0 0 0 10px !important;
+	@include outline(none);
+	&:focus {
+		box-shadow: 0 0 3pt 2pt $grey;
+	}
+}
+
+.block-clever {
+	margin-top: 15px;
+}
+
+.block-clever__control {
+	margin: 0 0 15px 0;
+}
+
+.btn__dict_groups {
+	height: $setting-height !important;
+	width: $setting-height !important;
+	line-height: 12px !important;
+	@include border-radius(50% !important);
+}
+
+
+.setting-edit-window__block {
+	margin: 0 0 15px 0;
+	background-color: $pale-grey;
+	padding: 0 0 15px 0;
+	input {
+		border: 1px solid $pale-grey;
+		height: $setting-height;
+		@include outline(none);
+		@include border-radius(5px);
+		&:focus {
+			box-shadow: 0 0 3pt 2pt $grey;
+		}
+	}
+	i {
+		cursor: pointer;
+		line-height: $setting-height;
+		&:hover {
+			color: green;
+		}
+	}
+}
+
+.edit-window-block__header {
+	width: 100%;
+	height: 30px;
+	line-height: 30px;
+	font-size: 16px;
+	text-align: center;
+	margin: 0 0 5px 0;
+	i {
+		cursor: pointer;
+		float: right;
+		margin: 5px 20px 0px 0;
+		&:hover {
+			color: $white;
+		}
+	}
 }

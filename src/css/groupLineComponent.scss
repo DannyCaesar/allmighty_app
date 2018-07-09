@@ -1,0 +1,41 @@
+@import 'global.scss';
+
+.group-line {
+	text-align: center;
+}
+
+.group-line__header {
+	font-weight: bold;
+}
+
+.group-line__header_elem {
+	background-color: $pale-grey;
+	padding: 5px 0;
+	border-right: 1px solid $white;
+}
+
+.group-line__btn {
+
+}
+
+.group-line__btn_edit {
+	&:hover {
+		color: $blue;
+	}
+}
+
+.group-line__btn_delete {
+	i {
+		font-size: 18px;
+		background-color: $red;
+		color: $white;
+		padding: 5px;
+		border: 1px solid $red;
+		@include border-radius(5px);
+		&:hover {
+			background-color: lighten($red, 5%);
+			border: 1px solid lighten($red, 5%);
+		}
+	}
+	padding: 0 0 15px 0;
+}
