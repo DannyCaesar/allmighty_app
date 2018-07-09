@@ -13,7 +13,7 @@ class DictionaryComponent extends Component {
 		super(props);
 		this.state = {
 			showAdd: false,
-			showSettings: false
+			showSettings: true
 		}
 	}
 
@@ -28,6 +28,16 @@ class DictionaryComponent extends Component {
 		.catch(error => {
 			console.log(error);
 		})
+
+		axios.get('/api/groups')
+		.then(response => {
+			const dataFetched = response.data;
+			dataFetched.forEach((item) => {
+				this.props.onAddGroup(item)
+			})
+		})
+		.catch(error => console.log(error))
+
 	}
 
 
@@ -134,6 +144,9 @@ export default connect(
 	dispatch => ({
 		onAddNote: (note) => {
 			dispatch({ type: 'ADD_NOTE', payload: note })
+		},
+		onAddGroup: (group) => {
+			dispatch({ type: 'ADD_GROUP', payload: group })
 		}
 	})
 )(DictionaryComponent);

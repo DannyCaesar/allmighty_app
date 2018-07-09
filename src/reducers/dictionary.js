@@ -43,3 +43,12 @@ export function dictionary_elements_show(state = false, action){
 			return state;
 	}
 }
+
+export function dictionary_groups(state = [], action) {
+	switch (action.type) {
+		case 'ADD_GROUP': 
+			return [...state, action.payload];
+		default: 
+			return state;
+	}
+}

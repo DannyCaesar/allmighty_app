@@ -4,6 +4,8 @@ import axios from 'axios';
 import fs from 'fs';
 
 import '../../css/settingsComponent.scss';
+import GroupLineComponent from './GroupLineComponent';
+
 
 class SettingsComponent extends Component {
 	
@@ -12,7 +14,10 @@ class SettingsComponent extends Component {
 		this.state = {
 			url: '',
 			url_from: '/home/denismoroz/Desktop/',
-			message: ''
+			message: '',
+			showEditWindow: true,
+			showSortWindow: false,
+			selectedGroup: {_id: "5b4355f4087aed1073f02c23", adddate: 2018, name: "test_group", words: [{word1: "hello"},{word2: 'hello2'} ]}
 		}
 		this.fileName = '';
 	}
@@ -56,9 +61,23 @@ class SettingsComponent extends Component {
 		this.props.onClose(false);
 	}
 
+	chooseGroup = (e) => {
+		const value = e.target.value;
+		const elem = this.props.store.dictionary_groups.filter((group) => 
+			group.name === value
+		)[0];
+		this.setState({ selectedGroup: elem })
+		console.log(this.props.store.dictionary_notes);
+	}
+
+	showGroups = () => {
+		this.setState({ showEditWindow: !this.state.showEditWindow })
+	}
+
 	render(){
 		return (
 			<div className="setting-window col-xs-10 col-xs-offset-1">
+
 				<div className="setting-window__header">Настройки<i className="fas fa-times" onClick={this.closeSettingsWindow}></i></div>
 				
 				<div className="setting-window__message">
@@ -90,6 +109,48 @@ class SettingsComponent extends Component {
 						</div>
 					</div>*/
 					}
+
+					<div className="setting-window__block">
+						<div className="block-clever ">
+							<div className="block-clever__control col-xs-12">
+								<div className="custom-btn btn__setting col-xs-5 col-sm-4 col-md-3" onClick={this.showGroups}>Редактировать группы</div>
+								<div className="custom-btn btn__setting col-xs-5 col-sm-4 col-md-3">Сортировать</div>
+							</div>
+							
+							{this.state.showEditWindow ?
+							<div className="col-xs-12 setting-edit-window">
+
+								<div className="col-xs-12 setting-edit-window__select">
+									<span className="col-xs-3 setting-edit-window__label">Группа</span>
+									<div className="col-xs-9">
+										<select className="form-control setting-edit-window__selector" id="group_selector" defaultValue={this.state.selectedGroup} onChange={this.chooseGroup}>
+											<option disabled value="">Выберите группу</option>
+											{this.props.store.dictionary_groups.map((group, index) => 
+												<option key={"group"+index} value={group.name}>{group.name}</option>
+											)}
+										</select>
+									</div>
+								</div>
+
+
+
+								{this.state.selectedGroup !== '' ?
+									<GroupLineComponent 
+										id = {this.state.selectedGroup._id}
+										adddate = {this.state.selectedGroup.adddate}
+										name = {this.state.selectedGroup.name}
+										words = {this.state.selectedGroup.words}
+									/>
+								: null }
+
+							</div>
+
+							: null }
+
+						</div>
+					</div>
+				
+
 
 				</div>
 			</div>

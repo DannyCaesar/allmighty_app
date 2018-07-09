@@ -31,7 +31,7 @@ app.get('/api', (req, res) => {
 app.get('/api/words/:id', (req, res) => {
 	const id = new objectId(req.params.id);
 	mongoClient.connect(process.env.MONGO_PORT_DEV, (error, client) => {
-		client.db('test_db').collection('words').findOne({_id: id}, (error,word) => {
+		client.db(process.env.MONGO_DICTIONARY_DB).collection('words').findOne({_id: id}, (error,word) => {
 			if (error) return res.status(400).send();
 			res.send(word);
 			client.close();
@@ -41,7 +41,7 @@ app.get('/api/words/:id', (req, res) => {
 
 app.get('/api/words', (req, res) => {
 	mongoClient.connect(process.env.MONGO_PORT_DEV, (err, client) => {
-			client.db("test_db").collection("words").find({}).toArray((err,words) => {
+			client.db(process.env.MONGO_DICTIONARY_DB).collection("words").find({}).toArray((err,words) => {
 				res.send(words);
 				client.close();
 		})
@@ -50,14 +50,14 @@ app.get('/api/words', (req, res) => {
 
 app.post('/api/words', (req, res) => {
 	mongoClient.connect(process.env.MONGO_PORT_DEV, (err, client) => {
-		client.db("test_db").collection("words").insert(req.body);
+		client.db(process.env.MONGO_DICTIONARY_DB).collection("words").insert(req.body);
 		client.close();
 	})
 })
 
 app.patch('/api/words', (req, res) => {
 	mongoClient.connect(process.env.MONGO_PORT_DEV, (err, client) => {
-		client.db("test_db").collection("words").removeOne({"english": req.body.english, "german": req.body.german, "russian": req.body.russian });
+		client.db(process.env.MONGO_DICTIONARY_DB).collection("words").removeOne({"english": req.body.english, "german": req.body.german, "russian": req.body.russian });
 		client.close();
 	})
 
@@ -65,7 +65,7 @@ app.patch('/api/words', (req, res) => {
 
 app.delete('/api/delete/:id', (req, res) => {
 	mongoClient.connect(process.env.MONGO_PORT_DEV, (err, client) => {
-		client.db("test_db").collection("words").removeOne({"_id": objectId(req.params.id)});
+		client.db(process.env.MONGO_DICTIONARY_DB).collection("words").removeOne({"_id": objectId(req.params.id)});
 		client.close();
 	})
 })
@@ -73,14 +73,14 @@ app.delete('/api/delete/:id', (req, res) => {
 app.post('/api/words/edit/:id', (req, res) => {
 	if (req.body.english!==undefined&&req.body.german!==undefined&&req.body.russian!==undefined) {
 		mongoClient.connect(process.env.MONGO_PORT_DEV, (err, client) => {
-			client.db("test_db").collection("words").update({"_id": objectId(req.params.id)}, { $set: {"english": req.body.english, "german": req.body.german, "russian": req.body.russian } });
+			client.db(process.env.MONGO_DICTIONARY_DB).collection("words").update({"_id": objectId(req.params.id)}, { $set: {"english": req.body.english, "german": req.body.german, "russian": req.body.russian } });
 			client.close();
 		})
 	}
 
 	if (req.body.important!==undefined) {
 		mongoClient.connect(process.env.MONGO_PORT_DEV, (err, client) => {
-			client.db("test_db").collection("words").update({"_id": objectId(req.params.id)}, { $set: {"important": req.body.important } });
+			client.db(process.env.MONGO_DICTIONARY_DB).collection("words").update({"_id": objectId(req.params.id)}, { $set: {"important": req.body.important } });
 			client.close();
 		})
 	}
@@ -88,14 +88,13 @@ app.post('/api/words/edit/:id', (req, res) => {
 	
 app.post('/api/loadWords', (req, res) => {
 	mongoClient.connect(process.env.MONGO_PORT_DEV, (err, client) => {
-			client.db("test_db").collection("words").find({},{ fields: {_id: 0} }).toArray((err,words) => {
-				console.log(words);
+			client.db(process.env.MONGO_DICTIONARY_DB).collection("words").find({},{ fields: {_id: 0} }).toArray((err,words) => {
 				fs.writeFile(req.body.url+'json/words.json',JSON.stringify(words),'utf8',(err)=> {
 					if (err) return console.log(err);
 					console.log('The file words.json was saved');
 				});
 			})
-			client.db("test_db").collection("groups").find({},{ fields: {_id: 0} }).toArray((err,words) => {
+			client.db(process.env.MONGO_DICTIONARY_DB).collection("groups").find({},{ fields: {_id: 0} }).toArray((err,words) => {
 				fs.writeFile(req.body.url+'json/groups.json',JSON.stringify(words),'utf8',(err)=> {
 					if (err) return console.log(err);
 					console.log('The file groups.json was saved');
@@ -104,6 +103,16 @@ app.post('/api/loadWords', (req, res) => {
 				res.send('Файлы сохранены');
 				client.close();
 		})
+})
+
+
+/***** GROUPS *****/
+app.get('/api/groups', (req, res) => {
+	mongoClient.connect(process.env.MONGO_PORT_DEV, (err, client) => {
+		client.db(process.env.MONGO_DICTIONARY_DB).collection("groups").find({}).toArray((err, groups) => {
+			res.json(groups);
+		})
+	})
 })
 
 

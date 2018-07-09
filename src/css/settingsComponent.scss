@@ -73,3 +73,34 @@
 }
 
 #loadFile { display: none};
+
+.btn__setting {
+	margin: 0 15px 0 15px;
+	padding: 3px 0 3px 0;
+	background-color: $pale-grey;
+	@include border-radius(10px);
+	@include transition(0.5s);
+	&:hover {
+		background-color: $black;
+		color: $white;
+	}
+}
+
+.setting-edit-window {
+	margin-top: 15px;
+}
+
+.setting-edit-window__select {
+	height: 35px;
+	line-height: 35px;
+}
+
+.setting-edit-window__label {
+	font-weight: bold;
+	text-align: center;
+}
+
+.setting-edit-window__selector {
+	width: 90%;
+	height: 35px;
+}
