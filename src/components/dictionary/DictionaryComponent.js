@@ -12,8 +12,9 @@ class DictionaryComponent extends Component {
 	constructor(props){
 		super(props);
 		this.state = {
-			showAdd: false,
-			showSettings: true
+			showAdd: true,
+			showSettings: false,
+			selectedGroup: ''
 		}
 	}
 
@@ -61,6 +62,10 @@ class DictionaryComponent extends Component {
 		const german = document.getElementById('german').value;
 		const english = document.getElementById('english').value;
 		const russian = document.getElementById('russian').value;
+		let groups = [];
+
+		if (this.state.selectedGroup !== '')
+			groups = [this.state.selectedGroup._id];
 
 		const data = {
 			english: english,
@@ -69,7 +74,7 @@ class DictionaryComponent extends Component {
 			dateAdd: new Date(),
 			important: false,
 			forms: [],
-			groups: [],
+			groups: groups,
 			comments: ''
 		}
 
@@ -78,9 +83,18 @@ class DictionaryComponent extends Component {
 		this.props.onAddNote(data);
 	}
 
+	chooseGroup = (e) => {
+		const value = e.target.value;
+		const elem = this.props.store.dictionary_groups.filter((group) => 
+			group.name === value
+		)[0];
+		this.setState({ selectedGroup: elem })
+	}
+
 	render(){
+		console.log(this.state.selectedGroup);
 		return (
-			<div className="component">
+			<div className="component col-xs-12">
 				<Link to="/"><div className="component__logo"></div></Link>
 				<div className="btn__dict_container">
 					<div className="btn btn__dict btn__dict_add" onClick={this.showAddWindow}><i className="fas fa-plus"></i></div>
@@ -91,18 +105,36 @@ class DictionaryComponent extends Component {
 				<div className="add-note-window col-xs-10 col-xs-offset-1">
 					<div className="add-note-window__header">Добавить запись <i className="fas fa-times" onClick={this.closeAddWindow}></i></div>
 					<div className="add-note-window__body">
-						<div className="col-xs-4 add-note-window__block">
+						<div className="col-xs-12 col-sm-4 add-note-window__block">
 							<input type="text" placeholder="English word" id="english" />
 						</div>
-						<div className="col-xs-4 add-note-window__block">
+						<div className="col-xs-12 col-sm-4 add-note-window__block">
 							<input type="text" placeholder="Deutsches Wort" id="german" />
 						</div>
-						<div className="col-xs-4 add-note-window__block">
+						<div className="col-xs-12 col-sm-4 add-note-window__block">
 							<input type="text" placeholder="Русское слово" id="russian" />
 						</div>
+
+						<div className="add-note-window__optional">
+							<div className="col-xs-6 col-sm-4 add-note-window__header_lesser">Дополнительно</div>
+							<div className="clearfix"></div>
+							<div className="col-xs-12 optional-groups">
+								<span className="col-xs-4">Группа</span>
+								<div className="col-xs-8">
+									<select className="form-control setting-edit-window__selector" defaultValue="" onChange={this.chooseGroup}>
+										<option disabled value="">Выберите группу</option>
+										{this.props.store.dictionary_groups.map((group, index) => 
+											<option key={"group"+index} value={group.name}>{group.name}</option>
+										)}
+									</select>
+								</div>
+							</div>
+						</div>
+
 						<div className="add-note-window__btn">
 							<div className="btn btn__dict btn__dict_check" onClick={this.addNote}><i className="fas fa-check"></i></div>
 						</div>
+
 					</div>
 				</div>
 				: null }
@@ -135,6 +167,7 @@ class DictionaryComponent extends Component {
 					/>
 				)}
 
+				<div className="author-footer col-xs-12">&#169; Denis Moroz, 2018</div>
 			</div>
 		)
 	}

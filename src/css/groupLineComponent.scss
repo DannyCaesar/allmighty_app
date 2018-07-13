@@ -26,6 +26,7 @@
 
 .group-line__btn_delete {
 	i {
+		cursor: pointer;
 		font-size: 18px;
 		background-color: $red;
 		color: $white;
@@ -38,4 +39,8 @@
 		}
 	}
 	padding: 0 0 15px 0;
+}
+
+.group-line__body {
+	margin-bottom: 10px;
 }

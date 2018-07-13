@@ -15,10 +15,11 @@ class SettingsComponent extends Component {
 			url: '',
 			url_from: '/home/denismoroz/Desktop/',
 			message: '',
-			showEditWindow: true,
+			showEditWindow: false,
 			showSortWindow: false,
 			showAddGroupWindow: false,
-			selectedGroup: {_id: "5b4355f4087aed1073f02c23", adddate: 2018, name: "test_group", words: [{word1: "hello"},{word2: 'hello2'} ]}
+			selectedGroup: "",
+			groupName: ''
 		}
 		this.fileName = '';
 	}
@@ -68,7 +69,6 @@ class SettingsComponent extends Component {
 			group.name === value
 		)[0];
 		this.setState({ selectedGroup: elem })
-		console.log(this.props.store.dictionary_notes);
 	}
 
 	showGroups = () => {
@@ -81,6 +81,38 @@ class SettingsComponent extends Component {
 
 	closeGroupWindow = () => {
 		this.setState({ showAddGroupWindow: false })
+	}
+
+	addGroup = () => {
+		axios.post('/api/groups', { name: this.state.groupName })
+		.then(response => {
+			if ("success" in response.data) {
+				this.setState({message: <div className="message_success" onClick={this.messageClose}>{response.data.success}</div> })
+				this.setState({ showAddGroupWindow: false });
+				axios.get('/api/groups')
+				.then(response => {
+					const dataFetched = response.data;
+					dataFetched.forEach((item) => {
+						if (item.name === this.state.groupName) this.props.onAddGroup(item)
+					})
+				})
+				.catch(error => console.log(error))
+				}
+			else 
+				this.setState({message: <div className="message_error" onClick={this.messageClose}>{response.data.error}</div> })
+		})
+		.catch(error => console.log(error));
+
+		setTimeout(() => { this.setState({message: ''}) }, 15000);
+	}
+
+	setGroupName = (e) => {
+		this.setState({ groupName: e.target.value })
+	}
+
+	getDeleteMessage = (value) => {
+		this.setState({ message: value });
+		this.setState({ selectedGroup: "" });
 	}
 
 	render(){
@@ -122,7 +154,11 @@ class SettingsComponent extends Component {
 					<div className="setting-window__block">
 						<div className="block-clever col-xs-12">
 							<div className="block-clever__control col-xs-12">
-								<div className="custom-btn btn__setting col-xs-5 col-sm-4 col-md-3" onClick={this.showGroups}>Редактировать группы</div>
+								{!this.state.showEditWindow ?
+									<div className="custom-btn btn__setting col-xs-5 col-sm-4 col-md-3" onClick={this.showGroups}>Редактировать группы</div>
+								:
+									<div className="custom-btn btn__setting btn__setting_close col-xs-5 col-sm-4 col-md-3" onClick={this.showGroups}><i className="fas fa-times"></i></div>
+								}
 								<div className="custom-btn btn__setting col-xs-5 col-sm-4 col-md-3">Сортировать</div>
 							</div>
 							
@@ -132,7 +168,7 @@ class SettingsComponent extends Component {
 								<div className="col-xs-12 setting-edit-window__select">
 									<span className="col-xs-3 setting-edit-window__label">Группа</span>
 									<div className="col-xs-8">
-										<select className="form-control setting-edit-window__selector" id="group_selector" defaultValue={this.state.selectedGroup} onChange={this.chooseGroup}>
+										<select className="form-control setting-edit-window__selector" id="group_selector" value={this.state.selectedGroup} onChange={this.chooseGroup}>
 											<option disabled value="">Выберите группу</option>
 											{this.props.store.dictionary_groups.map((group, index) => 
 												<option key={"group"+index} value={group.name}>{group.name}</option>
@@ -140,7 +176,11 @@ class SettingsComponent extends Component {
 										</select>
 									</div>
 									<div className="col-xs-1 btn btn__dict btn__dict_add btn__dict_groups" onClick={this.addGroupWindow}>
-										<i className="fas fa-plus"></i>
+										{!this.state.showAddGroupWindow ?
+											<i className="fas fa-plus"></i>
+										:
+											<i className="fas fa-times"></i>
+										}
 									</div>
 								</div>
 
@@ -148,8 +188,8 @@ class SettingsComponent extends Component {
 					
 										<div className="setting-edit-window__block col-xs-12">
 											<span className="edit-window-block__header col-xs-12">Добавить группу<i className="fas fa-times" onClick={this.closeGroupWindow}></i></span>
-											<input type="text" placeholder="Название" className="col-xs-10 col-xs-offset-1"/>
-											<i className="fas fa-check col-xs-1"></i>
+											<input type="text" placeholder="Название" className="col-xs-10 col-xs-offset-1" onChange={this.setGroupName} />
+											<i className="fas fa-check col-xs-1" onClick={this.addGroup}></i>
 										</div>
 							
 								: null}
@@ -161,6 +201,7 @@ class SettingsComponent extends Component {
 										adddate = {this.state.selectedGroup.adddate}
 										name = {this.state.selectedGroup.name}
 										words = {this.state.selectedGroup.words}
+										deleteMessage={this.getDeleteMessage}
 									/>
 								: null }
 
@@ -186,6 +227,9 @@ export default connect(
 	dispatch => ({
 		onHideElements: (status) => {
 			dispatch({ type: 'HIDE_ELEMENTS', payload: status })
+		},
+		onAddGroup: (group) => {
+			dispatch({ type: 'ADD_GROUP', payload: group })
 		}
 	})
 )(SettingsComponent);

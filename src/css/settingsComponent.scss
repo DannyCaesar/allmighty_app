@@ -55,6 +55,16 @@ $setting-height: 30px;
 	}
 }
 
+.message_error {
+	cursor: pointer;
+	padding: 3px 0 3px 0;
+	background-color: $red;
+	color: $white;
+	&:hover {
+		background-color: darken($red, 10%);
+	}
+}
+
 .block-upload {
 	height: $setting-height;
 	line-height: $setting-height;
@@ -163,5 +173,14 @@ $setting-height: 30px;
 		&:hover {
 			color: $white;
 		}
+	}
+}
+
+.btn__setting_close {
+	background-color: $black;
+	color: $white;
+	&:hover {
+		background-color: $pale-grey;
+		color: $black;
 	}
 }

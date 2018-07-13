@@ -100,6 +100,9 @@
 			box-shadow: 0 0 3pt 2pt $grey;
 		}
 	}
+	@media screen and (max-width: 768px) {
+		margin: 5px 0 0 0;
+	}
 }
 
 .add-note-window__btn {
@@ -115,6 +118,21 @@
 	&:hover {
 		color: $white;
 		background-color: $green;
+	}
+}
+
+.add-note-window__header_lesser {
+	margin: 15px 0;
+	text-align: center;
+	font-size: 16px;
+	background-color: $pale-grey;
+	@include border-radius(0 7px 7px 0);
+}
+
+.optional-groups {
+	span {
+		text-align: center;
+		line-height: 30px;
 	}
 }
 

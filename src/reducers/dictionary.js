@@ -48,6 +48,9 @@ export function dictionary_groups(state = [], action) {
 	switch (action.type) {
 		case 'ADD_GROUP': 
 			return [...state, action.payload];
+		case 'REMOVE_GROUP':
+			const reduced_group_array = state.filter((item) => item._id !== action.payload)
+			return reduced_group_array;
 		default: 
 			return state;
 	}

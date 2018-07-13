@@ -188,14 +188,14 @@ class LineComponent extends Component {
 						{!this.props.store.dictionary_elements_show ? 
 						<div className="col-xs-1">
 							{!this.state.edit ?
-								<div className="btn_line-edit col-xs-4" onClick={this.edit}><i className="fas fa-pen"></i></div>
+								<div className="btn_line-edit col-xs-4 xs-hidden" onClick={this.edit}><i className="fas fa-pen"></i></div>
 							:
-								<div className="btn_line-check col-xs-4" onClick={this.submitAllChanges}><i className="fas fa-check"></i></div>
+								<div className="btn_line-check col-xs-4 xs-hidden" onClick={this.submitAllChanges}><i className="fas fa-check"></i></div>
 							}
 
-							<div className="btn_line-remove col-xs-4" onClick={this.remove}><i className="fas fa-trash-alt"></i></div>
+							<div className="btn_line-remove col-xs-12 col-sm-4" onClick={this.remove}><i className="fas fa-trash-alt"></i></div>
 
-							<div className="btn_line-settings col-xs-4" onClick={this.showSettings}><i className="fas fa-cog"></i></div>
+							<div className="btn_line-settings col-xs-4 xs-hidden" onClick={this.showSettings}><i className="fas fa-cog"></i></div>
 						</div>
 						: null}
 
@@ -253,14 +253,14 @@ class LineComponent extends Component {
 						{!this.props.store.dictionary_elements_show ? 
 						<div className="col-xs-1">
 							{!this.state.edit ?
-								<div className="btn_line-edit col-xs-4" onClick={this.edit}><i className="fas fa-pen"></i></div>
+								<div className="btn_line-edit col-xs-4 xs-hidden" onClick={this.edit}><i className="fas fa-pen"></i></div>
 							:
-								<div className="btn_line-check col-xs-4" onClick={this.submitAllChanges}><i className="fas fa-check"></i></div>
+								<div className="btn_line-check col-xs-4 xs-hidden" onClick={this.submitAllChanges}><i className="fas fa-check"></i></div>
 							}
 
-							<div className="btn_line-remove col-xs-4" onClick={this.remove}><i className="fas fa-trash-alt"></i></div>
+							<div className="btn_line-remove col-xs-12 col-sm-4" onClick={this.remove}><i className="fas fa-trash-alt"></i></div>
 
-							<div className="btn_line-settings col-xs-4" onClick={this.showSettings}><i className="fas fa-cog"></i></div>
+							<div className="btn_line-settings col-xs-4 xs-hidden" onClick={this.showSettings}><i className="fas fa-cog"></i></div>
 						</div>
 						: null }
 					</div>

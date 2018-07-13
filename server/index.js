@@ -13,6 +13,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, '../build')));
 
 
+const port = process.env.PORT || 3000;
+
 const sampleData = {
 	id: "0",
 	english: "cat",
@@ -49,6 +51,9 @@ app.get('/api/words', (req, res) => {
 })
 
 app.post('/api/words', (req, res) => {
+	const parsedGroupsIds = req.body.groups.map((group) => new objectId(group));
+	req.body.groups = parsedGroupsIds;
+	
 	mongoClient.connect(process.env.MONGO_PORT_DEV, (err, client) => {
 		client.db(process.env.MONGO_DICTIONARY_DB).collection("words").insert(req.body);
 		client.close();
@@ -115,8 +120,34 @@ app.get('/api/groups', (req, res) => {
 	})
 })
 
+app.post('/api/groups', (req, res) => {
+	const timestamp = new Date;
+	const data = { name: req.body.name, words: [], adddate: timestamp };
+	mongoClient.connect(process.env.MONGO_PORT_DEV, (err, client) => {
+		client.db(process.env.MONGO_DICTIONARY_DB).collection("groups").insert(data, (error) => {
+			if (error) {
+				if (error.code == 11000) res.send({ error: "Группа с заданным именем уже существует! "})
+				else res.send({error: error.message});
+			}
+			else res.send({success: "Группа добавлена"});
+		});
+		client.close();
+		
+	})
+})
 
-app.listen(process.env.SERVER_PORT_DEV, (error) => {
+app.delete('/api/groups/:id', (req, res) => {
+	const id = new objectId(req.params.id);
+	mongoClient.connect(process.env.MONGO_PORT_DEV, (err, client) => {
+		client.db(process.env.MONGO_DICTIONARY_DB).collection("groups").remove({_id: id}, (error) => {
+			if (error) res.send({ error: error.message });
+			else res.send({ success: "Группа удалена"});
+		})
+	})
+})
+
+
+app.listen(port, (error) => {
 	if (error) console.log('Error: ' + error);
-	else console.log(`Server is running on ${process.env.SERVER_PORT_DEV}`)
+	else console.log(`Server is running on ${port}`)
 })
