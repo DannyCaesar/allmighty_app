@@ -1,0 +1,103 @@
+@import 'global.scss';
+
+.add-note-window {
+	margin-top: 20px;
+}
+
+.add-note-window__header {
+	text-align: center;
+	width: 100%;
+	height: 30px;
+	line-height: 30px;
+	font-size: 16px;
+	background-color: $pale-grey;
+	@include border-radius(15px 15px 0 0);
+	i {
+		cursor: pointer;
+		float: right;
+		margin: 5px 20px 0px 0;
+		&:hover {
+			color: $white;
+		}
+	}
+}
+
+.add-note-window__body {
+	border: 1px solid $pale-grey;
+	padding: 20px 0 0 0;
+	@include border-radius(0 0 15px 15px);
+}
+
+
+
+.add-note-window__block {
+	text-align: center;
+	input {
+		height: 30px;
+		padding-left: 15px;
+		width: 80%;
+		border: 1px solid $pale-grey;
+		@include outline(none);
+		@include border-radius(5px);
+		&:focus {
+			box-shadow: 0 0 3pt 2pt $grey;
+		}
+	}
+	@media screen and (max-width: 768px) {
+		margin: 5px 0 0 0;
+	}
+}
+
+.add-note-window__btn {
+	display: block;
+	text-align: center;
+	margin: 0px 0 20px 0;
+}
+
+.btn__dict_check {
+	margin-top: 20px;
+	background-color: $grey;
+	@include transition(0.5s);
+	&:hover {
+		color: $white;
+		background-color: $green;
+	}
+}
+
+.add-note-window__header_lesser {
+	margin: 15px 0;
+	text-align: center;
+	font-size: 16px;
+	background-color: $pale-grey;
+	@include border-radius(0 7px 7px 0);
+}
+
+.optional-groups {
+	span {
+		text-align: center;
+		line-height: 30px;
+	}
+
+}
+
+.optional-comment {
+		margin: 15px 0 0 0;
+}
+
+.optional-forms {
+	margin: 5px 0 0 0;
+	//background-color: $pale-orange;
+}
+
+.optional-forms__header {
+	text-align: center;
+	span {
+		cursor: pointer;
+		i, svg {
+			font-size: 14px;
+		}
+		&:hover {
+			color: $green;
+		}
+	}
+}
