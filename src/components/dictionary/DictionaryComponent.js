@@ -5,6 +5,7 @@ import axios from 'axios';
 
 import LineComponent from './LineComponent';
 import SettingsComponent from './SettingsComponent';
+import AddFormSimpleComponent from './AddFormSimpleComponent';
 import '../../css/dict.scss';
 
 class DictionaryComponent extends Component {
@@ -14,7 +15,8 @@ class DictionaryComponent extends Component {
 		this.state = {
 			showAdd: true,
 			showSettings: false,
-			selectedGroup: ''
+			selectedGroup: '',
+			formsCounter: ['form'],
 		}
 	}
 
@@ -44,6 +46,7 @@ class DictionaryComponent extends Component {
 
 	showAddWindow = () => {
 		this.setState({ showAdd: !this.state.showAdd })
+		this.setState({ formsCounter: [] });
 	}
 
 	showSettingsWindow = () => {
@@ -91,8 +94,12 @@ class DictionaryComponent extends Component {
 		this.setState({ selectedGroup: elem })
 	}
 
+	addForm = () => {
+		this.setState({ formsCounter: this.state.formsCounter.concat(['form']) })
+	}
+
 	render(){
-		console.log(this.state.selectedGroup);
+		console.log(this.state.formsCounter);
 		return (
 			<div className="component col-xs-12">
 				<Link to="/"><div className="component__logo"></div></Link>
@@ -118,6 +125,7 @@ class DictionaryComponent extends Component {
 						<div className="add-note-window__optional">
 							<div className="col-xs-6 col-sm-4 add-note-window__header_lesser">Дополнительно</div>
 							<div className="clearfix"></div>
+
 							<div className="col-xs-12 optional-groups">
 								<span className="col-xs-4">Группа</span>
 								<div className="col-xs-8">
@@ -129,6 +137,36 @@ class DictionaryComponent extends Component {
 									</select>
 								</div>
 							</div>
+
+							<div className="col-xs-12 optional-forms">
+								<div className="col-xs-4 optional-forms__header">
+									<span onClick={this.addForm}><i className="fas fa-plus"></i> Добавить форму слова</span>
+								</div>
+								<div className="clearfix"></div>
+								{this.state.formsCounter.map((form, index) => 
+									<AddFormSimpleComponent 
+										key={`form${index}`}
+									/>
+									/*<div key={`form${index}`}>
+										<div className="col-xs-12 col-sm-4 add-note-window__block">
+											<input type="text" placeholder="English word" id="english" />
+										</div>
+										<div className="col-xs-12 col-sm-4 add-note-window__block">
+											<input type="text" placeholder="Deutsches Wort" id="german" />
+										</div>
+										<div className="col-xs-12 col-sm-4 add-note-window__block">
+											<input type="text" placeholder="Русское слово" id="russian" />
+										</div>		
+									</div>*/
+								)}
+							</div>
+
+							<div className="col-xs-12 optional-comment">
+								<div className="col-xs-10 col-xs-offset-1">
+									<textarea className="form-control" placeholder="Комментарий"></textarea>
+								</div>
+							</div>
+
 						</div>
 
 						<div className="add-note-window__btn">

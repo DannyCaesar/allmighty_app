@@ -134,5 +134,27 @@
 		text-align: center;
 		line-height: 30px;
 	}
+
 }
 
+.optional-comment {
+		margin: 15px 0 0 0;
+}
+
+.optional-forms {
+	margin: 5px 0 0 0;
+	//background-color: $pale-orange;
+}
+
+.optional-forms__header {
+	text-align: center;
+	span {
+		cursor: pointer;
+		i, svg {
+			font-size: 14px;
+		}
+		&:hover {
+			color: $green;
+		}
+	}
+}
