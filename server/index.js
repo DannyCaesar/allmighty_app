@@ -51,9 +51,7 @@ app.get('/api/words', (req, res) => {
 })
 
 app.post('/api/words', (req, res) => {
-	const parsedGroupsIds = req.body.groups.map((group) => new objectId(group));
-	req.body.groups = parsedGroupsIds;
-	
+	req.body.groups._id = new objectId(req.body.groups._id);
 	mongoClient.connect(process.env.MONGO_PORT_DEV, (err, client) => {
 		client.db(process.env.MONGO_DICTIONARY_DB).collection("words").insert(req.body);
 		client.close();

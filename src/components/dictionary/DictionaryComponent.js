@@ -14,7 +14,7 @@ class DictionaryComponent extends Component {
 	constructor(props){
 		super(props);
 		this.state = {
-			showAdd: true,
+			showAdd: false,
 			showSettings: false,
 			selectedGroup: '',
 			formsCounter: ['form'],
@@ -62,39 +62,23 @@ class DictionaryComponent extends Component {
 		this.setState({ showSettings: value })
 	}
 
-	addNote = () => {
-		const german = document.getElementById('german').value;
-		const english = document.getElementById('english').value;
-		const russian = document.getElementById('russian').value;
-		let groups = [];
-
-		if (this.state.selectedGroup !== '')
-			groups = [this.state.selectedGroup._id];
-
-		const data = {
-			english: english,
-			german: german,
-			russian: russian,
-			dateAdd: new Date(),
-			important: false,
-			forms: [],
-			groups: groups,
-			comments: ''
-		}
-
-		axios.post('/api/words', data)
-		.catch(error => console.log(error))
-		this.props.onAddNote(data);
-	}
-
 	render(){
 		
 		return (
 			<div className="component col-xs-12">
 				<Link to="/"><div className="component__logo"></div></Link>
 				<div className="btn__dict_container">
-					<div className="btn btn__dict btn__dict_add" onClick={this.showAddWindow}><i className="fas fa-plus"></i></div>
-					<div className="btn btn__dict btn__dict_settings" onClick={this.showSettingsWindow}><i className="fas fa-ellipsis-h"></i></div>
+					{!this.state.showAdd ? 
+						<div className="btn btn__dict btn__dict_add" onClick={this.showAddWindow}><i className="fas fa-plus"></i></div>
+					: 
+						<div className="btn btn__dict btn__dict_close" onClick={this.showAddWindow}><i className="fas fa-times"></i></div>
+					}
+
+					{!this.state.showSettings ? 
+						<div className="btn btn__dict btn__dict_settings" onClick={this.showSettingsWindow}><i className="fas fa-ellipsis-h"></i></div>
+					: 
+						<div className="btn btn__dict btn__dict_close" onClick={this.showSettingsWindow}><i className="fas fa-times"></i></div>
+					}	
 				</div>
 
 				{this.state.showAdd ?

@@ -32,6 +32,18 @@
 	}
 }
 
+.btn__dict_close {
+	
+	background-color: $red;
+	@include transition(0.5s);
+	&:hover {
+		background-color: darken($red, 10%);
+	}
+	&:first-child {
+		margin: 0 5px 0 0;
+	}
+}
+
 .line-container {
 	margin-top: 20px;
 }

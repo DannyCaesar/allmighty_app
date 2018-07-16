@@ -1,0 +1,59 @@
+@import 'global.scss';
+
+.form-line {
+	background-color: $pale-grey;
+	padding: 10px 0;
+	input[type="text"]:disabled, textarea:disabled {
+		color: $white;
+		background-color: $black;
+	}
+}
+
+.form-line__textarea {
+	textarea {
+		height: 60px;
+		@include outline(none);
+		@include border-radius(5px);
+		&:focus {
+			box-shadow: 0 0 3pt 2pt $grey;
+		}
+	}
+}
+
+.form-line__btn {
+	line-height: 90px;
+	text-align: center;
+	font-size: 16px;
+	svg, i {
+		cursor: pointer;
+	}
+}
+
+.form-line__btn_success {
+	color: $green;
+	i:hover {
+		color: lighten($green, 10%);
+	}
+}
+
+.form-line__btn_error {
+	color: $red;
+	i:hover {
+		color: darken($red, 10%);
+	}
+}
+
+.form-line__block {
+	margin: 0 0 0 20px;
+	input {
+		height: 30px;
+		padding-left: 15px;
+		width: 100%;
+		border: 1px solid $pale-grey;
+		@include outline(none);
+		@include border-radius(5px);
+	}
+	@media screen and (max-width: 768px) {
+		margin: 5px 0 0 0;
+	}
+}

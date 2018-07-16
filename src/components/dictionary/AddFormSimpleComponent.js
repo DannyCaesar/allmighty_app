@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 
+import '../../css/addFormSimpleComponent.scss';
+
 class AddFormSimpleComponent extends Component {
 
 	constructor(){
@@ -7,7 +9,10 @@ class AddFormSimpleComponent extends Component {
 		this.state = {
 			english: '',
 			german: '',
-			russian: ''
+			russian: '',
+			comment: '',
+			submitted: false,
+			id: null
 		}
 	}
 
@@ -21,21 +26,91 @@ class AddFormSimpleComponent extends Component {
 	setEnglish = (e) => { this.setState({ english: e.target.value }) }
 	setGerman = (e) => { this.setState({ german: e.target.value }) }
 	setRussian = (e) => { this.setState({ russian: e.target.value }) }
+	setComment = (e) => { this.setState({ comment: e.target.value }) }
 
-	render(){
+	submit = () => {
+		const data = {
+			status: 'add',
+			id: Date.now(),
+			word: {
+				english: this.state.english,
+				german: this.state.german,
+				russian: this.state.russian,
+				comment: this.state.comment
+			}
+		}
+		this.setState({ id: Date.now() });
+		this.props.wordForm(data);
+	}
+
+	remove = () => {
+		const data = {
+			status: 'remove',
+			id: this.state.id
+		}
+		this.setState({ id: null })
+		this.props.wordForm(data);
+	}
+
+	renderSubmitted = () => {
 		return (
-			<div>
-				<div className="col-xs-12 col-sm-4 add-note-window__block">
-					<input type="text" placeholder="English word" onChange={this.setEnglish}/>
+			<div className="form-line col-xs-12">
+
+				<div className="col-xs-10 form-line__block">
+					<div className="col-xs-12 col-sm-4">
+						<input type="text" placeholder="English word" onChange={this.setEnglish} disabled />
+					</div>
+					<div className="col-xs-12 col-sm-4">
+						<input type="text" placeholder="Deutsches Wort" onChange={this.setGerman} disabled />
+					</div>
+					<div className="col-xs-12 col-sm-4">
+						<input type="text" placeholder="Русское слово" onChange={this.setRussian} disabled />
+					</div>
+
+					<div className="col-xs-12 form-line__textarea">
+						<textarea className="form-control col-xs-10" placeholder="Комментарий к форме слова" value={this.state.comment} disabled></textarea>
+					</div>
 				</div>
-				<div className="col-xs-12 col-sm-4 add-note-window__block">
-					<input type="text" placeholder="Deutsches Wort" onChange={this.setGerman} />
-				</div>
-				<div className="col-xs-12 col-sm-4 add-note-window__block">
-					<input type="text" placeholder="Русское слово" onChange={this.setRussian} />
-				</div>		
+
+				<div className="col-xs-1 form-line__btn form-line__btn_error">
+					<i className="fas fa-times" onClick={this.remove}></i>
+				</div>	
+					
 			</div>
 		)
+	}
+
+	renderUnSumbitted = () => {
+		return (
+			<div className="form-line col-xs-12">
+
+				<div className="col-xs-10 form-line__block">
+					<div className="col-xs-12 col-sm-4">
+						<input type="text" placeholder="English word" onChange={this.setEnglish}/>
+					</div>
+					<div className="col-xs-12 col-sm-4">
+						<input type="text" placeholder="Deutsches Wort" onChange={this.setGerman} />
+					</div>
+					<div className="col-xs-12 col-sm-4">
+						<input type="text" placeholder="Русское слово" onChange={this.setRussian} />
+					</div>
+
+					<div className="col-xs-12 form-line__textarea">
+						<textarea className="form-control col-xs-10" placeholder="Комментарий к форме слова" value={this.state.comment} onChange={this.setComment}></textarea>
+					</div>
+				</div>
+	
+
+				<div className="col-xs-1 form-line__btn form-line__btn_success">
+					<i className="fas fa-check" onClick={this.submit}></i>
+				</div>
+			</div>
+		)
+	}
+
+	render(){
+		if (this.state.id !== null) return this.renderSubmitted();
+		else return this.renderUnSumbitted();
 	}
 }
 

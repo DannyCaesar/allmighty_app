@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import axios from 'axios';
 
 import AddFormSimpleComponent from './AddFormSimpleComponent';
 
@@ -12,8 +13,23 @@ class AppWordComponent extends Component {
 		this.state = {
 			selectedGroup: '',
 			formsCounter: ['form'],
+			wordForms: [],
+			english: '',
+			german: '',
+			russian: '',
+			comment: ''
 		}
 	}
+
+	shouldComponentUpdate(nextProps, nextState) {
+		return (this.state.formsCounter !== nextState.formsCounter || this.state.wordForms !== nextState.wordForms ||
+				this.props.store.dictionary_groups !== nextProps.store.dictionary_groups);
+	}
+
+	setEnglish = (e) => { this.setState({ english: e.target. value }) }
+	setGerman = (e) => { this.setState({ german: e.target. value }) }
+	setRussian = (e) => { this.setState({ russian: e.target. value }) }
+	setComment = (e) => { this.setState({ comment: e.target. value }) }
 
 	addForm = () => {
 		this.setState({ formsCounter: this.state.formsCounter.concat(['form']) })
@@ -31,19 +47,58 @@ class AppWordComponent extends Component {
 		this.props.close(false);
 	}
 
+	getWordForm = (value) => {
+		if (value.status === "add") {
+		 	this.setState({ wordForms: this.state.wordForms.concat(value) })
+		}
+		if (value.status === "remove") {
+			const newWordsArr = this.state.wordForms.filter((form) => form.id !== value.id);
+			this.setState({ wordForms: newWordsArr });
+			this.setState({ formsCounter: this.state.formsCounter.slice(1,this.state.formsCounter.length) });
+		}
+
+	}
+
+	addNote = () => {
+		const german = this.state.german;
+		const english = this.state.english;
+		const russian = this.state.russian;
+		const comment = this.state.comment;
+		const forms = this.state.wordForms.map((form) => {
+			return form.word
+		})
+		const groups = this.state.selectedGroup;
+
+		const data = {
+			english: english,
+			german: german,
+			russian: russian,
+			dateAdd: new Date(),
+			important: false,
+			comment: comment,
+			forms: forms,
+			groups: groups
+		}
+
+		axios.post('/api/words', data)
+		.catch(error => console.log(error))
+		this.props.onAddNote(data);
+	}
+
+
 	render(){
 		return (
 			<div className="add-note-window col-xs-10 col-xs-offset-1">
 				<div className="add-note-window__header">Добавить запись <i className="fas fa-times" onClick={this.closeAddWindow}></i></div>
 				<div className="add-note-window__body">
 					<div className="col-xs-12 col-sm-4 add-note-window__block">
-						<input type="text" placeholder="English word" id="english" />
+						<input type="text" placeholder="English word" id="english" onChange={this.setEnglish} />
 					</div>
 					<div className="col-xs-12 col-sm-4 add-note-window__block">
-						<input type="text" placeholder="Deutsches Wort" id="german" />
+						<input type="text" placeholder="Deutsches Wort" id="german" onChange={this.setGerman} />
 					</div>
 					<div className="col-xs-12 col-sm-4 add-note-window__block">
-						<input type="text" placeholder="Русское слово" id="russian" />
+						<input type="text" placeholder="Русское слово" id="russian" onChange={this.setRussian} />
 					</div>
 				
 
@@ -71,6 +126,7 @@ class AppWordComponent extends Component {
 						{this.state.formsCounter.map((form, index) => 
 							<AddFormSimpleComponent 
 								key={`form${index}`}
+								wordForm={this.getWordForm}
 							/>
 									
 						)}
@@ -78,7 +134,7 @@ class AppWordComponent extends Component {
 
 					<div className="col-xs-12 optional-comment">
 						<div className="col-xs-10 col-xs-offset-1">
-							<textarea className="form-control" placeholder="Комментарий"></textarea>
+							<textarea className="form-control" placeholder="Комментарий" onChange={this.setComment}></textarea>
 						</div>
 					</div>
 
@@ -96,5 +152,10 @@ class AppWordComponent extends Component {
 export default connect (
 	state => ({
 		store: state
+	}),
+	dispatch => ({
+		onAddNote: (note) => {
+			dispatch({ type: 'ADD_NOTE', payload: note })
+		}
 	})
 )(AppWordComponent);
