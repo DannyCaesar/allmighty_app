@@ -6,6 +6,13 @@ import '../../css/groupLineComponent.scss';
 
 class GroupLineComponent extends Component {
 
+	constructor(){
+		super();
+		this.state = {
+			showWords: false
+		}
+	}
+
 	deleteGroup = () => {
 		const id = this.props.id;
 		axios.delete(`/api/groups/${id}`)
@@ -24,6 +31,15 @@ class GroupLineComponent extends Component {
 		return date.replace("T", " ").substr(0, date.length - 5);
 	}
 
+	showWords = () => {
+		this.setState({ showWords: !this.state.showWords });
+	}
+
+	getWord = (word) => {
+		const thisWord = this.props.store.dictionary_notes.filter((elem) => elem._id === word)[0];
+		return thisWord.english;
+	}
+
 	render(){
 		return (
 			<div className="group-line">
@@ -38,10 +54,20 @@ class GroupLineComponent extends Component {
 					<div className="col-xs-11">
 						<div className="col-xs-4">{this.props.name}</div>
 						<div className="col-xs-4">{this.parseDate(this.props.adddate)}</div>
-						<div className="col-xs-4">{this.props.words.length}</div>
+						<div className="col-xs-4 custom-btn group-line__btn_words" onClick={this.showWords}>{this.props.words.length}</div>
 					</div>
 				</div> 
 				
+				{!this.state.showWords ? 
+					<div className="col-xs-12 group-line__words">
+						{this.props.words.map((word, index) => 
+							<div key={`word${index}`} className="words__elem_container">
+								<span className="words__elem">{this.getWord(word)}<i className="fas fa-times"></i></span>
+							</div>
+						)}
+					</div>
+				: null }
+
 				<div className="group-line__btn group-line__btn_delete">
 					<i className="fas fa-trash-alt" data-toggle="tooltip" title="Удалить группу" onClick={this.deleteGroup}></i>
 				</div>

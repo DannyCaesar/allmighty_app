@@ -15,7 +15,7 @@ class SettingsComponent extends Component {
 			url: '',
 			url_from: '/home/denismoroz/Desktop/',
 			message: '',
-			showEditWindow: false,
+			showEditWindow: true,
 			showSortWindow: false,
 			showAddGroupWindow: false,
 			selectedGroup: "",
@@ -135,7 +135,7 @@ class SettingsComponent extends Component {
 
 					<div className="setting-window__block col-xs-12">
 						<div className="block-upload">
-							<span className="col-xs-3">Выгрузить базу слов</span>
+							<span className="col-sm-3">Выгрузить базу слов</span>
 							<input className="col-xs-8" type="text" placeholder="Адрес выгрузки" value={this.state.url} onChange={this.changeUrl} />
 							<div onClick={this.load}><i className="fas fa-download col-xs-1"></i></div>
 						</div>
@@ -168,7 +168,7 @@ class SettingsComponent extends Component {
 								<div className="col-xs-12 setting-edit-window__select">
 									<span className="col-xs-3 setting-edit-window__label">Группа</span>
 									<div className="col-xs-8">
-										<select className="form-control setting-edit-window__selector" id="group_selector" value={this.state.selectedGroup} onChange={this.chooseGroup}>
+										<select className="form-control setting-edit-window__selector" id="group_selector" defaultValue={this.state.selectedGroup} onChange={this.chooseGroup}>
 											<option disabled value="">Выберите группу</option>
 											{this.props.store.dictionary_groups.map((group, index) => 
 												<option key={"group"+index} value={group.name}>{group.name}</option>

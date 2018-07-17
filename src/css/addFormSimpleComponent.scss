@@ -27,6 +27,9 @@
 	svg, i {
 		cursor: pointer;
 	}
+	@media screen and (max-width: 768px) {
+		line-height: 140px;
+	}
 }
 
 .form-line__btn_success {

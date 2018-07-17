@@ -15,12 +15,20 @@ class LineComponent extends Component {
 			german: '',
 			russian: '',
 			important: false,
+			groups: [],
 			edit: false,
 			editEnglish: false,
 			editGerman: false,
 			editRussian: false,
-			showSettings: false
+			showSettings: false,
 		}
+	}
+
+	componentWillReceiveProps(nextProps) {
+		if (this.props.groups !== nextProps.groups) this.setState({ groups: nextProps.groups });
+		if (this.props.english !== nextProps.english) this.setState({ english: nextProps.english });
+		if (this.props.german !== nextProps.german) this.setState({ german: nextProps.german });
+		if (this.props.russian !== nextProps.russian) this.setState({ russian: nextProps.russian });
 	}
 
 	componentDidMount(){
@@ -28,6 +36,14 @@ class LineComponent extends Component {
 		this.setState({ german: this.props.german });
 		this.setState({ russian: this.props.russian });
 		this.setState({ important: this.props.important });
+		this.setState({ groups: this.props.groups });
+	}
+
+	shouldComponentUpdate(nextProps, nextState) {
+		/*return ( this.state.edit !== nextState.edit || this.state.editEnglish !== nextState.editEnglish ||
+			 	this.state.editGerman !== nextState.editGerman || this.state.editRussian !== nextState.editRussian ||
+			 	this.state.showSettings !== nextState.showSettings || this.state.english !== nextState.english)*/
+		return true;
 	}
 
 	remove = () => {
@@ -37,7 +53,11 @@ class LineComponent extends Component {
 			russian: this.state.russian
 		}
 
-		axios.delete('/api/delete/'+this.props.db_id)
+		axios.delete('/api/words/'+this.props.db_id)
+		.then(response => {
+			const thisGroup = this.props.store.dictionary_groups.filter((group) => group._id === this.props.groups)[0];
+			this.props.onDeleteWordFromGroup(thisGroup, this.props.db_id);
+		})
 		.catch(error => console.log(error));
 		
 		this.props.onRemoveNote(this.props.db_id);
@@ -193,9 +213,9 @@ class LineComponent extends Component {
 								<div className="btn_line-check col-xs-4 xs-hidden" onClick={this.submitAllChanges}><i className="fas fa-check"></i></div>
 							}
 
-							<div className="btn_line-remove col-xs-12 col-sm-4" onClick={this.remove}><i className="fas fa-trash-alt"></i></div>
+							<div className="btn_line-remove col-xs-4 xs-hidden" onClick={this.remove}><i className="fas fa-trash-alt"></i></div>
 
-							<div className="btn_line-settings col-xs-4 xs-hidden" onClick={this.showSettings}><i className="fas fa-cog"></i></div>
+							<div className="btn_line-settings col-xs-12 col-sm-4" onClick={this.showSettings}><i className="fas fa-cog"></i></div>
 						</div>
 						: null}
 
@@ -258,9 +278,9 @@ class LineComponent extends Component {
 								<div className="btn_line-check col-xs-4 xs-hidden" onClick={this.submitAllChanges}><i className="fas fa-check"></i></div>
 							}
 
-							<div className="btn_line-remove col-xs-12 col-sm-4" onClick={this.remove}><i className="fas fa-trash-alt"></i></div>
+							<div className="btn_line-remove col-xs-4 xs-hidden" onClick={this.remove}><i className="fas fa-trash-alt"></i></div>
 
-							<div className="btn_line-settings col-xs-4 xs-hidden" onClick={this.showSettings}><i className="fas fa-cog"></i></div>
+							<div className="btn_line-settings col-xs-12 col-sm-4" onClick={this.showSettings}><i className="fas fa-cog"></i></div>
 						</div>
 						: null }
 					</div>
@@ -280,6 +300,9 @@ export default connect(
 		},
 		onNoteUpdate: (note) => {
 			dispatch({ type: "UPDATE_NOTE", payload: note });
+		},
+		onDeleteWordFromGroup: (group, word_id) => {
+			dispatch({ type: "DELETE_WORD_FROM_GROUP", group: group, word_id: word_id });
 		}
 	})
 )(LineComponent);

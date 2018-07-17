@@ -69,3 +69,14 @@
 	border-left: 1px solid white;
 }
 
+.component__message {
+	font-size: 24px;
+	line-height: 40px;
+	text-align: center;
+	vertical-align: middle;
+	color: $green;
+	background: radial-gradient(closest-side, lighten($green,15%), $pale-green, #fff);
+	i {
+		line-height: 40px;
+	}
+}

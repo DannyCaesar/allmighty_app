@@ -12,7 +12,7 @@ class AppWordComponent extends Component {
 		super(props);
 		this.state = {
 			selectedGroup: '',
-			formsCounter: ['form'],
+			formsCounter: [],
 			wordForms: [],
 			english: '',
 			german: '',
@@ -77,12 +77,24 @@ class AppWordComponent extends Component {
 			important: false,
 			comment: comment,
 			forms: forms,
-			groups: groups
+			groups: groups._id
 		}
-
+	
 		axios.post('/api/words', data)
+		.then((response) => {
+			const in_data = response.data;
+
+			axios.get('/api/words/'+ in_data.word_id)
+			.then(res => this.props.onAddNote(res.data))
+			.catch(error => console.log(error))
+
+			axios.get('/api/groups/' + in_data.group_id)
+			.then(res => this.props.onUpdateGroup(res.data))
+			.catch(error => console.log(error))
+		})
 		.catch(error => console.log(error))
-		this.props.onAddNote(data);
+
+		this.props.close('added');
 	}
 
 
@@ -119,7 +131,7 @@ class AppWordComponent extends Component {
 					</div>
 
 					<div className="col-xs-12 optional-forms">
-						<div className="col-xs-4 optional-forms__header">
+						<div className="col-sm-4 col-xs-12 optional-forms__header">
 							<span onClick={this.addForm}><i className="fas fa-plus"></i> Добавить форму слова</span>
 						</div>
 						<div className="clearfix"></div>
@@ -156,6 +168,9 @@ export default connect (
 	dispatch => ({
 		onAddNote: (note) => {
 			dispatch({ type: 'ADD_NOTE', payload: note })
+		},
+		onUpdateGroup: (group) => {
+			dispatch({ type: 'UPDATE_GROUP', payload: group })
 		}
 	})
 )(AppWordComponent);

@@ -51,11 +51,39 @@ app.get('/api/words', (req, res) => {
 })
 
 app.post('/api/words', (req, res) => {
-	req.body.groups._id = new objectId(req.body.groups._id);
+	req.body.groups = new objectId(req.body.groups);
+	let word_id = '';
+
 	mongoClient.connect(process.env.MONGO_PORT_DEV, (err, client) => {
-		client.db(process.env.MONGO_DICTIONARY_DB).collection("words").insert(req.body);
-		client.close();
+
+		const p = new Promise((resolve, reject) => {
+			client.db(process.env.MONGO_DICTIONARY_DB).collection("words").insert(req.body, (error, info) => {
+				word_id = new objectId(info.insertedIds['0']);
+				resolve(word_id);
+				if (error) reject(error);
+			});
+		})
+		
+		p.then((word_id) => {
+			client.db(process.env.MONGO_DICTIONARY_DB).collection("groups").update({_id: req.body.groups}, { $push: {words: word_id} }, (error, info) =>{
+				if (error) throw(error);
+			})
+
+			const data = {
+				word_id: word_id,
+				group_id: req.body.groups
+			}
+
+			res.send(data);
+		})
+		.then(() => client.close())
+		.catch((error) => {
+			console.log(error);
+			client.close();
+		});
+
 	})
+
 })
 
 app.patch('/api/words', (req, res) => {
@@ -66,9 +94,12 @@ app.patch('/api/words', (req, res) => {
 
 })
 
-app.delete('/api/delete/:id', (req, res) => {
+app.delete('/api/words/:id', (req, res) => {
 	mongoClient.connect(process.env.MONGO_PORT_DEV, (err, client) => {
 		client.db(process.env.MONGO_DICTIONARY_DB).collection("words").removeOne({"_id": objectId(req.params.id)});
+		client.db(process.env.MONGO_DICTIONARY_DB).collection("groups").update({},{ $pull: { words: new objectId(req.params.id)} }, (err, documents) => {
+			res.send('deleted');
+		});
 		client.close();
 	})
 })
@@ -114,6 +145,16 @@ app.get('/api/groups', (req, res) => {
 	mongoClient.connect(process.env.MONGO_PORT_DEV, (err, client) => {
 		client.db(process.env.MONGO_DICTIONARY_DB).collection("groups").find({}).toArray((err, groups) => {
 			res.json(groups);
+		})
+	})
+})
+
+app.get('/api/groups/:id', (req, res) => {
+	mongoClient.connect(process.env.MONGO_PORT_DEV, (err, client) => {
+		client.db(process.env.MONGO_DICTIONARY_DB).collection("groups").findOne({_id: new objectId(req.params.id)},(error, group) => {
+			if (error) return res.status(400).send(error);
+			res.send(group);
+			client.close();
 		})
 	})
 })

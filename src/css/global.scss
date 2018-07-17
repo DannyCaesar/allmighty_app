@@ -6,6 +6,8 @@
 $black: #000;
 $white: #fff;
 $blue: #7084fe;
+$alt-blue: #3c8dbc;
+$pale-blue: #00c0ef;
 $red: #ff9696;
 $grey: #a0a0a0;
 $pale-grey: #d2d2d2;
@@ -32,6 +34,7 @@ $pale-green: #b2e4cd;
 
 a {
 	text-decoration: none;
+	cursor: default;
 }
 
 i {
@@ -97,6 +100,7 @@ div.col-xs-1,div.col-xs-10,div.col-xs-11,div.col-xs-12,div.col-xs-2,div.col-xs-3
 	border-radius: 50%;
 	@include setBackground(100px, 100px, url(../assets/logo.png));
 	&:hover {
+		cursor: pointer;
 		@include setBoxShadow(0 0 20px rgba(0,0,0,1));
 		animation: pulse 1s infinite;
 		animation-delay: 1s;

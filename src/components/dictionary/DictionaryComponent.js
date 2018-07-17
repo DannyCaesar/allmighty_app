@@ -15,9 +15,10 @@ class DictionaryComponent extends Component {
 		super(props);
 		this.state = {
 			showAdd: false,
-			showSettings: false,
+			showSettings: true,
 			selectedGroup: '',
 			formsCounter: ['form'],
+			showMessage: false
 		}
 	}
 
@@ -55,7 +56,12 @@ class DictionaryComponent extends Component {
 	}
 
 	closeAddWindow = (value) => {
-		this.setState({ showAdd: value })
+		this.setState({ showAdd: false })
+
+		if (value === "added") {
+			this.setState({ showMessage: true });
+			setTimeout(() => this.setState({ showMessage: false}), 2000);
+		}
 	}
 
 	closeSettingsWindow = (value) => {
@@ -80,6 +86,12 @@ class DictionaryComponent extends Component {
 						<div className="btn btn__dict btn__dict_close" onClick={this.showSettingsWindow}><i className="fas fa-times"></i></div>
 					}	
 				</div>
+
+				{this.state.showMessage ?
+					<div className="component__message col-xs-12">
+						<i className="fa fa-check-circle"></i>
+					</div>
+				: null }
 
 				{this.state.showAdd ?
 					<AddWordComponent 
@@ -112,6 +124,7 @@ class DictionaryComponent extends Component {
 						german={note.german}
 						russian={note.russian}
 						important={note.important}
+						groups={note.groups}
 					/>
 				)}
 

@@ -56,6 +56,10 @@ class AddFormSimpleComponent extends Component {
 		return (
 			<div className="form-line col-xs-12">
 
+				<div className="col-xs-1 form-line__btn form-line__btn_error">
+					<i className="fas fa-minus" onClick={this.remove} data-toggle="tooltip" title="Удалить форму"></i>
+				</div>
+
 				<div className="col-xs-10 form-line__block">
 					<div className="col-xs-12 col-sm-4">
 						<input type="text" placeholder="English word" onChange={this.setEnglish} disabled />
@@ -71,10 +75,6 @@ class AddFormSimpleComponent extends Component {
 						<textarea className="form-control col-xs-10" placeholder="Комментарий к форме слова" value={this.state.comment} disabled></textarea>
 					</div>
 				</div>
-
-				<div className="col-xs-1 form-line__btn form-line__btn_error">
-					<i className="fas fa-times" onClick={this.remove}></i>
-				</div>	
 					
 			</div>
 		)
@@ -83,8 +83,11 @@ class AddFormSimpleComponent extends Component {
 	renderUnSumbitted = () => {
 		return (
 			<div className="form-line col-xs-12">
+				<div className="col-xs-1 form-line__btn form-line__btn_error">
+					<i className="fas fa-minus" onClick={this.remove} data-toggle="tooltip" title="Удалить форму"></i>
+				</div>
 
-				<div className="col-xs-10 form-line__block">
+				<div className="col-xs-9 form-line__block">
 					<div className="col-xs-12 col-sm-4">
 						<input type="text" placeholder="English word" onChange={this.setEnglish}/>
 					</div>
