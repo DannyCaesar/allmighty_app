@@ -13,6 +13,10 @@ class GroupLineComponent extends Component {
 		}
 	}
 
+	conponentWillReceiveProps(nextProps){
+		console.log(this.props.words);
+	}
+
 	deleteGroup = () => {
 		const id = this.props.id;
 		axios.delete(`/api/groups/${id}`)
@@ -37,10 +41,22 @@ class GroupLineComponent extends Component {
 
 	getWord = (word) => {
 		const thisWord = this.props.store.dictionary_notes.filter((elem) => elem._id === word)[0];
-		return thisWord.english;
+		return thisWord;
+	}
+
+	removeWord = (e) => {
+		const word_id = e.target.getAttribute('word_id');
+		const group_id = this.props.id;
+
+		axios.post('/api/groups/'+group_id, {id: word_id})
+		.catch(error => console.log(error));
+	
+		this.props.onDeleteWordFromGroup(group_id, word_id);
+		this.setState({ showWords: false }) //this is extra code for rerendering
 	}
 
 	render(){
+		
 		return (
 			<div className="group-line">
 				<div className="group-line__header col-xs-11 col-xs-offset-1">
@@ -58,14 +74,20 @@ class GroupLineComponent extends Component {
 					</div>
 				</div> 
 				
-				{!this.state.showWords ? 
+				{this.state.showWords ? 
+					this.props.words.length !== 0 ?
 					<div className="col-xs-12 group-line__words">
 						{this.props.words.map((word, index) => 
 							<div key={`word${index}`} className="words__elem_container">
-								<span className="words__elem">{this.getWord(word)}<i className="fas fa-times"></i></span>
+								<span className="words__elem" data-toggle="tooltip" title={`English: ${this.getWord(word).english}, german: ${this.getWord(word).german}, russian: ${this.getWord(word).russian}`}>
+									{this.getWord(word).english}
+									<i className="fas fa-times" word_id={word} onClick={this.removeWord}></i>
+								</span>
 							</div>
 						)}
 					</div>
+					: 
+					<div className="group-line__words_message">Группа пуста</div>
 				: null }
 
 				<div className="group-line__btn group-line__btn_delete">
@@ -84,6 +106,9 @@ export default connect (
 	dispatch => ({
 		onRemoveGroup: (id) => {
 			dispatch({ type: "REMOVE_GROUP", payload: id})
+		},
+		onDeleteWordFromGroup: (group_id, word_id) => {
+			dispatch({ type: "DELETE_WORD_FROM_GROUP", group_id: group_id, word_id: word_id });
 		}
 	})
 )(GroupLineComponent);

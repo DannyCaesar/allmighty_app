@@ -15,7 +15,7 @@ class DictionaryComponent extends Component {
 		super(props);
 		this.state = {
 			showAdd: false,
-			showSettings: true,
+			showSettings: false,
 			selectedGroup: '',
 			formsCounter: ['form'],
 			showMessage: false
@@ -125,6 +125,8 @@ class DictionaryComponent extends Component {
 						russian={note.russian}
 						important={note.important}
 						groups={note.groups}
+						forms={note.forms}
+						comment={note.comment}
 					/>
 				)}
 

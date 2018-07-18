@@ -15,13 +15,18 @@ class SettingsComponent extends Component {
 			url: '',
 			url_from: '/home/denismoroz/Desktop/',
 			message: '',
-			showEditWindow: true,
+			showEditWindow: false,
 			showSortWindow: false,
 			showAddGroupWindow: false,
 			selectedGroup: "",
 			groupName: ''
 		}
 		this.fileName = '';
+	}
+
+	componentDidMount(){
+		if (this.props.store.dictionary_elements_show)
+			document.getElementById('hideElements').checked = true;
 	}
 
 	changeUrl = (e) => {

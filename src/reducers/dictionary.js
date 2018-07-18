@@ -56,9 +56,12 @@ export function dictionary_groups(state = [], action) {
 			})
 			return new_state;
 		case 'DELETE_WORD_FROM_GROUP':
-			const group_id = action.group._id;
+			let group_id = null;
+			if (action.group === undefined) group_id = action.group_id;
+			else group_id = action.group._id;
 			const word_id = action.word_id;
 			let del_state = state;
+			
 			del_state.forEach((group, index) => {
 				if (group._id === group_id) {
 					del_state[index].words.forEach((word, index2) => {

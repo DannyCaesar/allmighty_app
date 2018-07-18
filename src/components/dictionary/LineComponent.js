@@ -154,7 +154,7 @@ class LineComponent extends Component {
 		this.props.onNoteUpdate({id: this.props.db_id, important: true });
 
 		axios.post('/api/words/edit/'+this.props.db_id, {important: true })
-		.catch(error => console.log('error'));	
+		.catch(error => console.log(error));	
 	}
 
 	render(){
@@ -199,6 +199,9 @@ class LineComponent extends Component {
 							<LineSettingComponent 
 								db_id={this.props.db_id}
 								important={this.props.important}
+								comment={this.props.comment}
+								forms={this.props.forms}
+								groups={this.props.groups}
 								onClose={this.close}
 								onSetImportance={this.setImportance}
 							/>
@@ -264,6 +267,9 @@ class LineComponent extends Component {
 							<LineSettingComponent 
 								db_id={this.props.db_id}
 								important={this.props.important}
+								comment={this.props.comment}
+								forms={this.props.forms}
+								groups={this.props.groups}
 								onClose={this.close}
 								onSetImportance={this.setImportance}
 							/>

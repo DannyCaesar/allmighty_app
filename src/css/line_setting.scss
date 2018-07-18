@@ -3,7 +3,7 @@
 .line-setting-component {
 	margin: 30px 0 0px 0;
 	width: 100%;
-	background-color: $pale-green;
+	background-color: $pale-grey;
 }
 
 .line-setting-component__header {
@@ -17,24 +17,36 @@
 	}
 }
 
+.line-setting-component__body {
+	border: 2px solid $pale-grey;
+	background-color: $pale-grey;
+}
+
 .line__btn { 
 	cursor: pointer;
-	border: 2px solid $pale-green;
+	background-color: $white;
 	@include transition(1s);
+	@include border-radius(15px);
 	&:hover {
-		background-color: $white;
+		background-color: $black;
+		color: $white;
 	}
-	label {
-		cursor: pointer;
-		padding-right: 5px;
+	@media screen and (max-width: 768px) {
+		margin: 0;
+		@include border-radius(0px);
+	}
+}
+
+.line__btn_active {
+	background-color: $black;
+	color: $white;
+	&:hover {
+		background-color: $red;
 	}
 }
 
 .line__btn_unimportant {
 	background-color: $white;
-	&:hover {
-		background-color: $pale-orange;
-	}
 }
 
 .line__btn_important {

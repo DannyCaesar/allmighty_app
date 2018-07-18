@@ -175,6 +175,16 @@ app.post('/api/groups', (req, res) => {
 	})
 })
 
+app.post('/api/groups/:id', (req, res) => {
+	const group_id = new objectId(req.params.id);
+	const word_id = new objectId(req.body.id);
+	mongoClient.connect(process.env.MONGO_PORT_DEV, (err, client) => {
+		client.db(process.env.MONGO_DICTIONARY_DB).collection("groups").update({_id: group_id},{ $pull: { words: word_id } }, (err, documents) => {
+			res.send('deleted');
+		});
+	})
+})
+
 app.delete('/api/groups/:id', (req, res) => {
 	const id = new objectId(req.params.id);
 	mongoClient.connect(process.env.MONGO_PORT_DEV, (err, client) => {
