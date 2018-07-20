@@ -40,7 +40,9 @@ class AddFormSimpleComponent extends Component {
 			}
 		}
 		this.setState({ id: Date.now() });
-		this.props.wordForm(data);
+
+		if (this.props.lineSetting !== true)
+			this.props.wordForm(data);
 	}
 
 	remove = () => {

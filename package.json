@@ -2,7 +2,7 @@
   "name": "allmighty_app",
   "version": "1.0.0",
   "description": "",
-  "homepage":".",
+  "homepage": ".",
   "main": "index.js",
   "scripts": {
     "webpack_dev": "webpack-dev-server --mode development --open",

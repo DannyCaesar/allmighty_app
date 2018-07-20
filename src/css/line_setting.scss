@@ -52,3 +52,46 @@
 .line__btn_important {
 	background-color: $pale-orange;
 }
+
+//forms of word
+.form-line {
+	padding: 0;
+	i, svg {
+		color: $red;
+		&:hover {
+			cursor: pointer;
+			color: lighten($red, 10%);
+		}
+
+	}
+}
+
+.form-line_even {
+	background-color: lighten($pale-grey, 10%);
+	&:hover {
+		background-color: $black;
+		color: $white;
+	}
+}
+
+.form-line_odd {
+	&:hover {
+		background-color: $black;
+		color: $white;
+	}
+}
+
+
+.form-line__element {
+}
+
+.form-btn_add {
+	cursor: pointer;
+	padding: 5px 0;
+	&:hover {
+		color: $green;
+	}
+	i, svg {
+		padding-bottom: 2px;
+	}
+}
