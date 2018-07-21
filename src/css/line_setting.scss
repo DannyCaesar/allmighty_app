@@ -95,3 +95,11 @@
 		padding-bottom: 2px;
 	}
 }
+
+.form-line__btn_delete {
+	cursor: pointer;
+	color: darken($red, 10%);
+	&:hover {
+		color: $red;
+	}
+}

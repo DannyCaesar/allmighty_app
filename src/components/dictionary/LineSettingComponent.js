@@ -12,16 +12,28 @@ class LineSettingComponent extends Component {
 		this.state = {
 			importance: this.props.important,
 			comment: '',
+			word: {},
 			showForms: false,
 			showGroups: false,
 			addForm: false
 		}
 	}
 
+	componentDidMount(){
+		const word = this.props.store.dictionary_notes.filter((note) => 
+			note._id === this.props.db_id
+		)[0];
+		this.setState({ word: word })
+	}
+
+	componentWillReceiveProps(nextProps) {
+		if (this.props.store.dictionary_notes.forms.length !== nextProps.dictionary_notes.forms.lenght) console.log('yes');
+	}
+
 	shouldComponentUpdate(nextProps, nextState){
 		return this.state.importance !== nextState.importance || this.props.important !== nextProps.important ||
 			this.state.showForms !== nextState.showForms || this.state.showGroups !== nextState.showGroups ||
-			this.state.addForm !== nextState.addForm;
+			this.state.addForm !== nextState.addForm || this.state.word !== nextState.word;
 	}
 
 	importanceCheck = () => {
@@ -54,8 +66,36 @@ class LineSettingComponent extends Component {
 		this.setState({ addForm: !this.state.addForm })
 	}
 
+	deleteForm = (e) => {
+		const id = e.target.getAttribute('form_id');
+		axios.put('/api/forms/' + id, {word_id: this.props.db_id})
+		.then(response => {
+			console.log(response.data);
+		})
+		.catch(error => "Error deleting form: " + error);
+
+		this.props.onNoteFormUpdate(this.props.db_id, id);
+		const buffer = this.state.word;
+		buffer.forms = buffer.forms.filter((form) => 
+			form.id !== id
+		)
+
+		this.setState({ word: buffer });
+
+	}
+
+	remove = () => {
+		axios.delete('/api/words/'+this.props.db_id)
+		.then(response => {
+			const thisGroup = this.props.store.dictionary_groups.filter((group) => group._id === this.props.groups)[0];
+			this.props.onDeleteWordFromGroup(thisGroup, this.props.db_id);
+		})
+		.catch(error => console.log(error));
+		
+		this.props.onRemoveNote(this.props.db_id);
+	}
+
 	render(){
-		console.log(this.state.addForm);
 		return (
 			<div className="line-setting-component">
 				<div className="line-setting-component__header">Дополнительные настройки <i className="fas fa-times" onClick={this.close}></i></div>
@@ -101,8 +141,8 @@ class LineSettingComponent extends Component {
 									<div onClick={this.addForm} className="form-btn_add">Отменить <i className="fas fa-times"></i></div>
 								}
 
-							{this.props.forms !== undefined ? 
-									this.props.forms.map((form, index) => 
+							{this.state.word.forms !== undefined ? 
+									this.state.word.forms.map((form, index) => 
 									index % 2 === 0 ? 
 									<div className="form-line form-line_even col-xs-12" key={`form${index}`}>
 										<div className="col-xs-11">
@@ -111,7 +151,7 @@ class LineSettingComponent extends Component {
 											<div className="form-line__element col-sm-3 col-xs-4">{form.russian}</div>
 											<div className="form-line__element col-sm-3 col-xs-12">{form.comment}</div>
 										</div>
-										<div className="col-xs-1"><i className="fas fa-trash-alt"></i></div>
+										<div className="col-xs-1"><i className="fas fa-trash-alt" form_id={form.id} onClick={this.deleteForm}></i></div>
 									</div>
 									:
 									<div className="form-line form-line_odd col-xs-12" key={`form${index}`}>
@@ -121,31 +161,9 @@ class LineSettingComponent extends Component {
 											<div className="form-line__element col-sm-3 col-xs-4">{form.russian}</div>
 											<div className="form-line__element col-sm-3 col-xs-12">{form.comment}</div>
 										</div>
-										<div className="col-xs-1"><i className="fas fa-trash-alt"></i></div>
+										<div className="col-xs-1"><i className="fas fa-trash-alt" form_id={form.id} onClick={this.deleteForm}></i></div>
 									</div>
 									)
-									/*<table className="form-line">
-										<thead>
-											<tr>
-												<th>English</th>
-												<th>Deutsch</th>
-												<th>Русский</th>
-												<th>Комментарий</th>
-											</tr>
-										</thead>
-										<tbody>	
-											{this.props.forms.map((form, index) => 
-											<tr key={`form${index}`}>
-												<td className="form-line__element">{form.english}</td>
-												<td className="form-line__element">{form.german}</td>
-												<td className="form-line__element">{form.russian}</td>
-												<td className="form-line__element">{form.comment}</td>
-												<td>D</td>
-											</tr>
-											)}
-										</tbody>
-									</table> */
-								
 							:
 								<div>Нет форм</div>
 							}
@@ -169,6 +187,10 @@ class LineSettingComponent extends Component {
 					<div className="col-xs-12">
 						<textarea className="form-control" placeholder="Комментарий" defaultValue={this.props.comment} onChange={this.setComment}></textarea>
 					</div>
+
+					<div className="col-xs-12">
+						<div className="form-line__btn_delete" onClick={this.remove}>Удалить запись</div>
+					</div>
 				</div>
 			</div>
 		)
@@ -182,6 +204,15 @@ export default connect (
 	dispatch => ({
 		onNoteUpdate: (note) => {
 			dispatch({ type: "UPDATE_NOTE", payload: note });
+		},
+		onNoteFormUpdate: (word_id, form_id) => {
+			dispatch({ type: "UPDATE_NOTE_GROUP", word_id: word_id, form_id: form_id })
+		},
+		onDeleteWordFromGroup: (group, word_id) => {
+			dispatch({ type: "DELETE_WORD_FROM_GROUP", group: group, word_id: word_id });
+		},
+		onRemoveNote: (note) => {
+			dispatch({ type: "REMOVE_NOTE", payload: note });
 		}
 	})
 )(LineSettingComponent);

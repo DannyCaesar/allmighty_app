@@ -33,6 +33,7 @@ class AddFormSimpleComponent extends Component {
 			status: 'add',
 			id: Date.now(),
 			word: {
+				id: Date.now(),
 				english: this.state.english,
 				german: this.state.german,
 				russian: this.state.russian,

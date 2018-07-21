@@ -47,11 +47,11 @@ class LineComponent extends Component {
 	}
 
 	remove = () => {
-		const data = {
+		/*const data = {
 			english: this.state.english,
 			german: this.state.german,
 			russian: this.state.russian
-		}
+		}*/
 
 		axios.delete('/api/words/'+this.props.db_id)
 		.then(response => {
