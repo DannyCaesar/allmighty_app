@@ -39,6 +39,9 @@ $setting-height: 30px;
 	input {
 		margin-left: 10px;
 	}
+	label {
+		font-weight: normal;
+	}
 }
 
 .setting-window__message {
@@ -66,8 +69,8 @@ $setting-height: 30px;
 }
 
 .block-upload {
-	height: $setting-height;
-	line-height: $setting-height;
+	//height: $setting-height;
+	//line-height: $setting-height;
 	input {
 		border: 2px solid $pale-grey;
 		@include border-radius(5px);
@@ -97,18 +100,22 @@ $setting-height: 30px;
 		background-color: $black;
 		color: $white;
 	}
+	@media screen and (max-width: 768px) {
+		margin: 0 0 2px 0;
+		@include border-radius(0px);
+	}
 }
-
 
 .setting-edit-window__select {
 	height: $setting-height;
 	line-height: $setting-height;
-	margin: 0 0 15px 0;
+	margin: 15px 0;
 }
 
 .setting-edit-window__label {
 	font-weight: bold;
 	text-align: center;
+	padding: 0 !important;
 }
 
 .setting-edit-window__selector {
@@ -136,6 +143,11 @@ $setting-height: 30px;
 	@include border-radius(50% !important);
 }
 
+.btn__dict_close {
+	background-color: $red;
+	color: $white;
+}
+
 
 .setting-edit-window__block {
 	margin: 0 0 15px 0;
@@ -153,6 +165,7 @@ $setting-height: 30px;
 	i {
 		cursor: pointer;
 		line-height: $setting-height;
+		text-align: center;
 		&:hover {
 			color: green;
 		}
@@ -165,9 +178,11 @@ $setting-height: 30px;
 	line-height: 30px;
 	font-size: 16px;
 	text-align: center;
-	margin: 0 0 5px 0;
+	margin: 0px 0 5px 0;
 	i {
 		cursor: pointer;
+		line-height: 30px;
+		vertical-align: middle;
 		float: right;
 		margin: 5px 20px 0px 0;
 		&:hover {
@@ -180,7 +195,7 @@ $setting-height: 30px;
 	background-color: $black;
 	color: $white;
 	&:hover {
-		background-color: $pale-grey;
-		color: $black;
+		background-color: $red;
+		color: $white;
 	}
 }

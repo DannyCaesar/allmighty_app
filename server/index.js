@@ -164,17 +164,20 @@ app.get('/api/groups/:id', (req, res) => {
 app.post('/api/groups', (req, res) => {
 	const timestamp = new Date;
 	const data = { name: req.body.name, words: [], adddate: timestamp };
-	mongoClient.connect(mongo_port, (err, client) => {
-		client.db(process.env.MONGO_DICTIONARY_DB).collection("groups").insert(data, (error) => {
-			if (error) {
-				if (error.code == 11000) res.send({ error: "Группа с заданным именем уже существует! "})
-				else res.send({error: error.message});
-			}
-			else res.send({success: "Группа добавлена"});
-		});
-		client.close();
-		
-	})
+	if (data.name === "") res.send({ error: "Задайте название для группы"});
+	else {
+		mongoClient.connect(mongo_port, (err, client) => {
+			client.db(process.env.MONGO_DICTIONARY_DB).collection("groups").insert(data, (error) => {
+				if (error) {
+					if (error.code == 11000) res.send({ error: "Группа с заданным именем уже существует! "})
+					else res.send({error: error.message});
+				}
+				else res.send({success: "Группа добавлена"});
+			});
+			client.close();
+			
+		})
+	}
 })
 
 app.post('/api/groups/:id', (req, res) => {

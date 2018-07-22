@@ -21,6 +21,9 @@ class LineComponent extends Component {
 			editGerman: false,
 			editRussian: false,
 			showSettings: false,
+			hideEnglish: false,
+			hideGerman: false,
+			hideRussian: false
 		}
 	}
 
@@ -29,6 +32,11 @@ class LineComponent extends Component {
 		if (this.props.english !== nextProps.english) this.setState({ english: nextProps.english });
 		if (this.props.german !== nextProps.german) this.setState({ german: nextProps.german });
 		if (this.props.russian !== nextProps.russian) this.setState({ russian: nextProps.russian });
+		if (this.props.store.dictionary_hidden !== nextProps.store.dictionary_hidden) {
+			if (nextProps.store.dictionary_hidden.english !== this.state.hideEnglish) this.setState({ hideEnglish: nextProps.store.dictionary_hidden.english})
+			if (nextProps.store.dictionary_hidden.german !== this.state.hideGerman) this.setState({ hideGerman: nextProps.store.dictionary_hidden.german})
+			if (nextProps.store.dictionary_hidden.russian !== this.state.hideRussian) this.setState({ hideRussian: nextProps.store.dictionary_hidden.russian})
+		}
 	}
 
 	componentDidMount(){
@@ -37,6 +45,9 @@ class LineComponent extends Component {
 		this.setState({ russian: this.props.russian });
 		this.setState({ important: this.props.important });
 		this.setState({ groups: this.props.groups });
+		this.setState({ hideEnglish: this.props.store.dictionary_hidden.english });
+		this.setState({ hideGerman: this.props.store.dictionary_hidden.german });
+		this.setState({ hideRussian: this.props.store.dictionary_hidden.russian });
 	}
 
 	shouldComponentUpdate(nextProps, nextState) {
@@ -157,6 +168,18 @@ class LineComponent extends Component {
 		.catch(error => console.log(error));	
 	}
 
+	showEnglish = () => {
+		this.setState({ hideEnglish: false })
+	}
+
+	showGerman = () => {
+		this.setState({ hideGerman: false })
+	}
+
+	showRussian = () => {
+		this.setState({ hideRussian: false })
+	}
+
 	render(){
 		if (this.state.important) {
 			return (
@@ -168,31 +191,39 @@ class LineComponent extends Component {
 						</div>
 
 						<div className="col-xs-10 line__element line_important">
-						{this.state.editEnglish ?
-							<div className="line__item col-xs-4">
-								<div className="col-xs-11"><input type="text" placeholder="english" value={this.state.english} onChange={this.changeEnglish} onKeyDown={this.keySubmitEnglishChanges} /></div>
-								<div className="col-xs-1 btn_check" onClick={this.submitEnglishChanges}><i className="fas fa-check"></i></div>
-							</div>
-						:
-							<div className="col-xs-4 col-md-4 line__block" id={`${this.props.id}english`} onDoubleClick={this.editEnglish}>{this.state.english}</div>
+						
+						{!this.state.hideEnglish ?
+							this.state.editEnglish ?
+								<div className="line__item col-xs-4">
+									<div className="col-xs-11"><input type="text" placeholder="english" value={this.state.english} onChange={this.changeEnglish} onKeyDown={this.keySubmitEnglishChanges} /></div>
+									<div className="col-xs-1 btn_check" onClick={this.submitEnglishChanges}><i className="fas fa-check"></i></div>
+								</div>
+							:
+								<div className="col-xs-4 col-md-4 line__block" id={`${this.props.id}english`} onDoubleClick={this.editEnglish}>{this.state.english}</div>
+						: <div className="col-xs-4 col-md-4 line__block line__block_hidden" onClick={this.showEnglish}>{this.state.english}</div>
 						}
 
-						{this.state.editGerman ? 
-							<div className="line__item col-xs-4">
-								<div className="col-xs-11"><input type="text" placeholder="german" value={this.state.german} onChange={this.changeGerman} onKeyDown={this.keySubmitGermanChanges} /></div>
-								<div className="col-xs-1 btn_check" onClick={this.submitGermanChanges}><i className="fas fa-check"></i></div>
-							</div>
-						: 
-							<div className="col-xs-4 col-md-4 line__block" id={this.props.id+"german"} onDoubleClick={this.editGerman}>{this.state.german}</div>
+
+						{!this.state.hideGerman ? 
+							this.state.editGerman ? 
+								<div className="line__item col-xs-4">
+									<div className="col-xs-11"><input type="text" placeholder="german" value={this.state.german} onChange={this.changeGerman} onKeyDown={this.keySubmitGermanChanges} /></div>
+									<div className="col-xs-1 btn_check" onClick={this.submitGermanChanges}><i className="fas fa-check"></i></div>
+								</div>
+							: 
+								<div className="col-xs-4 col-md-4 line__block" id={this.props.id+"german"} onDoubleClick={this.editGerman}>{this.state.german}</div>
+						: <div className="col-xs-4 col-md-4 line__block line__block_hidden" onClick={this.showGerman}>{this.state.german}</div>
 						}
 						
-						{this.state.editRussian ? 
-							<div className="line__item col-xs-4">
-								<div className="col-xs-11"><input type="text" placeholder="russian" value={this.state.russian} onChange={this.changeRussian} onKeyDown={this.keySubmitRussianChanges} /></div>
-								<div className="col-xs-1 btn_check" onClick={this.submitRussianChanges}><i className="fas fa-check"></i></div>
-							</div>
-						:
-							<div className="col-xs-4 col-md-4 line__block" id={this.props.id+"russian"} onDoubleClick={this.editRussian}>{this.state.russian}</div>
+						{!this.state.hideRussian ? 
+							this.state.editRussian ? 
+								<div className="line__item col-xs-4">
+									<div className="col-xs-11"><input type="text" placeholder="russian" value={this.state.russian} onChange={this.changeRussian} onKeyDown={this.keySubmitRussianChanges} /></div>
+									<div className="col-xs-1 btn_check" onClick={this.submitRussianChanges}><i className="fas fa-check"></i></div>
+								</div>
+							:
+								<div className="col-xs-4 col-md-4 line__block" id={this.props.id+"russian"} onDoubleClick={this.editRussian}>{this.state.russian}</div>
+						: <div className="col-xs-4 col-md-4 line__block line__block_hidden" onClick={this.showRussian}>{this.state.russian}</div>
 						}
 
 						{this.state.showSettings ? 
@@ -236,31 +267,40 @@ class LineComponent extends Component {
 						</div>
 
 						<div className="col-xs-10 line__element">
-						{this.state.editEnglish ?
-							<div className="line__item col-xs-4">
-								<div className="col-xs-11"><input type="text" placeholder="english" value={this.state.english} onChange={this.changeEnglish} onKeyDown={this.keySubmitEnglishChanges} /></div>
-								<div className="col-xs-1 btn_check" onClick={this.submitEnglishChanges}><i className="fas fa-check"></i></div>
-							</div>
-						:
-							<div className="col-xs-4 col-md-4 line__block" id={`${this.props.id}english`} onDoubleClick={this.editEnglish}>{this.state.english}</div>
+
+						{!this.state.hideEnglish ?
+							this.state.editEnglish ?
+								<div className="line__item col-xs-4">
+									<div className="col-xs-11"><input type="text" placeholder="english" value={this.state.english} onChange={this.changeEnglish} onKeyDown={this.keySubmitEnglishChanges} /></div>
+									<div className="col-xs-1 btn_check" onClick={this.submitEnglishChanges}><i className="fas fa-check"></i></div>
+								</div>
+							:
+								<div className="col-xs-4 col-md-4 line__block" id={`${this.props.id}english`} onDoubleClick={this.editEnglish}>{this.state.english}</div>
+						: <div className="col-xs-4 col-md-4 line__block line__block_hidden" onClick={this.showEnglish}>{this.state.english}</div>
 						}
 
-						{this.state.editGerman ? 
-							<div className="line__item col-xs-4">
-								<div className="col-xs-11"><input type="text" placeholder="german" value={this.state.german} onChange={this.changeGerman} onKeyDown={this.keySubmitGermanChanges} /></div>
-								<div className="col-xs-1 btn_check" onClick={this.submitGermanChanges}><i className="fas fa-check"></i></div>
-							</div>
-						: 
-							<div className="col-xs-4 col-md-4 line__block" id={this.props.id+"german"} onDoubleClick={this.editGerman}>{this.state.german}</div>
+
+						{!this.state.hideGerman ?
+							this.state.editGerman ? 
+								<div className="line__item col-xs-4">
+									<div className="col-xs-11"><input type="text" placeholder="german" value={this.state.german} onChange={this.changeGerman} onKeyDown={this.keySubmitGermanChanges} /></div>
+									<div className="col-xs-1 btn_check" onClick={this.submitGermanChanges}><i className="fas fa-check"></i></div>
+								</div>
+							: 
+								<div className="col-xs-4 col-md-4 line__block" id={this.props.id+"german"} onDoubleClick={this.editGerman}>{this.state.german}</div>
+						: <div className="col-xs-4 col-md-4 line__block line__block_hidden" onClick={this.showGerman}>{this.state.german}</div>
 						}
 						
-						{this.state.editRussian ? 
-							<div className="line__item col-xs-4">
-								<div className="col-xs-11"><input type="text" placeholder="russian" value={this.state.russian} onChange={this.changeRussian} onKeyDown={this.keySubmitRussianChanges} /></div>
-								<div className="col-xs-1 btn_check" onClick={this.submitRussianChanges}><i className="fas fa-check"></i></div>
-							</div>
-						:
-							<div className="col-xs-4 col-md-4 line__block" id={this.props.id+"russian"} onDoubleClick={this.editRussian}>{this.state.russian}</div>
+
+						{!this.state.hideRussian ?
+							this.state.editRussian ? 
+								<div className="line__item col-xs-4">
+									<div className="col-xs-11"><input type="text" placeholder="russian" value={this.state.russian} onChange={this.changeRussian} onKeyDown={this.keySubmitRussianChanges} /></div>
+									<div className="col-xs-1 btn_check" onClick={this.submitRussianChanges}><i className="fas fa-check"></i></div>
+								</div>
+							:
+								<div className="col-xs-4 col-md-4 line__block" id={this.props.id+"russian"} onDoubleClick={this.editRussian}>{this.state.russian}</div>
+						: <div className="col-xs-4 col-md-4 line__block line__block_hidden" onClick={this.showRussian}>{this.state.russian}</div>
 						}
 
 						{this.state.showSettings ? 

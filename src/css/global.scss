@@ -122,6 +122,11 @@ div.col-xs-1,div.col-xs-10,div.col-xs-11,div.col-xs-12,div.col-xs-2,div.col-xs-3
 	text-align: center;
 }
 
+.custom-btn_red {
+	background-color: $red;
+	color: $white;
+}
+
 .xs-hidden {
 	@media screen and (max-width: 768px) {
 		display: none;

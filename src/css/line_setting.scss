@@ -57,10 +57,8 @@
 .form-line {
 	padding: 0;
 	i, svg {
-		color: $red;
 		&:hover {
 			cursor: pointer;
-			color: lighten($red, 10%);
 		}
 
 	}
