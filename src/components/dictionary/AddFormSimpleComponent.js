@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
 import '../../css/addFormSimpleComponent.scss';
 
@@ -44,6 +45,10 @@ class AddFormSimpleComponent extends Component {
 
 		if (this.props.lineSetting !== true)
 			this.props.wordForm(data);
+		else {
+			this.props.newForm(data);
+			//this.props.onAddNoteForm(data.word);
+		}
 	}
 
 	remove = () => {
@@ -120,4 +125,8 @@ class AddFormSimpleComponent extends Component {
 	}
 }
 
-export default AddFormSimpleComponent;
+export default connect(
+	state => ({
+		store: state
+	})
+)(AddFormSimpleComponent);

@@ -101,3 +101,32 @@
 		color: $red;
 	}
 }
+
+.toLeft {
+	position: absolute;
+	float: left;
+	left: 10px;
+	line-height: 30px;
+}
+
+.group-block__list {
+	margin: 10px 0;
+	display: inline-block;
+}
+
+.group-block {
+	padding: 2px 5px;
+	margin: 0 5px;
+	width: auto;
+	background-color: lighten($alt-blue, 10%);
+	color: $white;
+	@include border-radius(5px);
+	@include transition(0.5s);
+	i {
+		cursor: pointer;
+		padding: 0 5px;
+	}
+	&:hover {
+		background-color: lighten($alt-blue, 20%);
+	}
+}

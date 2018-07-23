@@ -12,10 +12,12 @@ class LineSettingComponent extends Component {
 		this.state = {
 			importance: this.props.important,
 			comment: '',
-			word: {},
+			forms: [],
 			showForms: false,
 			showGroups: false,
-			addForm: false
+			addForm: false,
+			message: '',
+			selectedGroup: '',
 		}
 	}
 
@@ -23,17 +25,22 @@ class LineSettingComponent extends Component {
 		const word = this.props.store.dictionary_notes.filter((note) => 
 			note._id === this.props.db_id
 		)[0];
-		this.setState({ word: word })
+		this.setState({ forms: word.forms })
 	}
 
 	componentWillReceiveProps(nextProps) {
-		if (this.props.store.dictionary_notes.forms.length !== nextProps.dictionary_notes.forms.lenght) console.log('yes');
+		if (this.props.store.dictionary_notes !== nextProps.store.dictionary_notes) {
+			const word = nextProps.store.dictionary_notes.filter((note) => 
+				note._id === this.props.db_id
+			)[0];
+			this.setState({ forms: word.forms  })
+		}
 	}
 
 	shouldComponentUpdate(nextProps, nextState){
 		return this.state.importance !== nextState.importance || this.props.important !== nextProps.important ||
 			this.state.showForms !== nextState.showForms || this.state.showGroups !== nextState.showGroups ||
-			this.state.addForm !== nextState.addForm || this.state.word !== nextState.word;
+			this.state.addForm !== nextState.addForm || this.state.forms !== nextState.forms;
 	}
 
 	importanceCheck = () => {
@@ -70,18 +77,11 @@ class LineSettingComponent extends Component {
 		const id = e.target.getAttribute('form_id');
 		axios.put('/api/forms/' + id, {word_id: this.props.db_id})
 		.then(response => {
-			console.log(response.data);
+			//console.log(response.data);
 		})
 		.catch(error => "Error deleting form: " + error);
 
 		this.props.onNoteFormUpdate(this.props.db_id, id);
-		const buffer = this.state.word;
-		buffer.forms = buffer.forms.filter((form) => 
-			form.id !== id
-		)
-
-		this.setState({ word: buffer });
-
 	}
 
 	remove = () => {
@@ -93,6 +93,21 @@ class LineSettingComponent extends Component {
 		.catch(error => console.log(error));
 		
 		this.props.onRemoveNote(this.props.db_id);
+	}
+
+	addNewForm = (data) => {
+		const word_id = this.props.db_id;
+		const form = data.word;
+		this.props.onAddNoteForm(word_id, form);
+		this.setState({ addForm: false });
+
+		axios.post('/api/words/edit/'+this.props.db_id, { form: form })
+		.catch(error => "Error on adding new form: " + error)
+	}
+
+	getGroupName = (id) => {
+		const group = this.props.store.dictionary_groups.filter((group) => group._id === id)[0];
+		return group.name;
 	}
 
 	render(){
@@ -117,7 +132,7 @@ class LineSettingComponent extends Component {
 						</div>
 					:
 						<div className="line__btn col-xs-12 col-sm-4" onClick={this.showForms}>
-							Формы слова
+							<i className="fas fa-angle-down toLeft xs-only"></i> Формы слова
 						</div>
 					}
 
@@ -127,7 +142,7 @@ class LineSettingComponent extends Component {
 						</div>
 					: 
 						<div className="line__btn col-xs-12 col-sm-4" onClick={this.showGroups}>
-							Группы
+							<i className="fas fa-angle-down toLeft xs-only"></i> Группы
 						</div>
 					}
 
@@ -141,8 +156,8 @@ class LineSettingComponent extends Component {
 									<div onClick={this.addForm} className="form-btn_add">Отменить <i className="fas fa-times"></i></div>
 								}
 
-							{this.state.word.forms !== undefined ? 
-									this.state.word.forms.map((form, index) => 
+							{this.state.forms !== undefined ? 
+									this.state.forms.map((form, index) => 
 									index % 2 === 0 ? 
 									<div className="form-line form-line_even col-xs-12" key={`form${index}`}>
 										<div className="col-xs-11">
@@ -171,6 +186,7 @@ class LineSettingComponent extends Component {
 								{this.state.addForm ?
 									<AddFormSimpleComponent 
 										lineSetting={true}
+										newForm={this.addNewForm}
 									/>
 								: null }
 
@@ -178,8 +194,24 @@ class LineSettingComponent extends Component {
 						: null}
 
 						{this.state.showGroups ? 
-							<div className="extension__groups-window col-xs-12">
-								test
+							<div className="extension__groups-window">
+								{this.props.groups.length !== 0 ?
+									<div className="group-block__list">
+										<div className="group-block">{this.getGroupName(this.props.groups)} <i className="fas fa-times"></i></div>
+									</div>
+								:
+									<div className="col-xs-12 optional-groups">
+										<span className="col-xs-4">Группа</span>
+										<div className="col-xs-8">
+											<select className="form-control setting-edit-window__selector" defaultValue="" onChange={this.chooseGroup}>
+												<option disabled value="">Выберите группу</option>
+												{this.props.store.dictionary_groups.map((group, index) => 
+													<option key={"group"+index} value={group.name}>{group.name}</option>
+												)}
+											</select>
+										</div>
+									</div>
+								}
 							</div>
 						: null}
 					</div>
@@ -206,13 +238,16 @@ export default connect (
 			dispatch({ type: "UPDATE_NOTE", payload: note });
 		},
 		onNoteFormUpdate: (word_id, form_id) => {
-			dispatch({ type: "UPDATE_NOTE_GROUP", word_id: word_id, form_id: form_id })
+			dispatch({ type: "UPDATE_NOTE_FORMS", word_id: word_id, form_id: form_id })
 		},
 		onDeleteWordFromGroup: (group, word_id) => {
 			dispatch({ type: "DELETE_WORD_FROM_GROUP", group: group, word_id: word_id });
 		},
 		onRemoveNote: (note) => {
 			dispatch({ type: "REMOVE_NOTE", payload: note });
+		},
+		onAddNoteForm: (word_id, form) => {
+			dispatch({ type: 'ADD_NOTE_FORM', word_id: word_id, form: form })
 		}
 	})
 )(LineSettingComponent);

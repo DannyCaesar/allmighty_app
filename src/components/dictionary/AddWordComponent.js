@@ -67,7 +67,8 @@ class AppWordComponent extends Component {
 		const forms = this.state.wordForms.map((form) => {
 			return form.word
 		})
-		const groups = this.state.selectedGroup;
+
+		let groups = this.state.selectedGroup;
 
 		const data = {
 			english: english,
@@ -79,7 +80,9 @@ class AppWordComponent extends Component {
 			forms: forms,
 			groups: groups._id
 		}
-	
+		
+		console.log(data);
+
 		axios.post('/api/words', data)
 		.then((response) => {
 			const in_data = response.data;

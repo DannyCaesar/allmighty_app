@@ -30,9 +30,9 @@ export function dictionary_notes(state = [], action) {
 				if (note._id === action.payload.id) important_state.splice(index,1,important_note);
 			})
 			return important_state;
-		case 'UPDATE_NOTE_GROUP':
+		case 'UPDATE_NOTE_FORMS':
 			let form_state = state;
-			let form_note = state.filter((note) => 
+			let form_note = form_state.filter((note) => 
 				note._id === action.word_id
 			)[0];
 
@@ -43,7 +43,13 @@ export function dictionary_notes(state = [], action) {
 			form_state.forEach((note, index) => {
 				if (note._id === action.word_id) form_state.splice(index,1,form_note);
 			})
-			return form_state;
+			return [...form_state];
+		case 'ADD_NOTE_FORM':
+			let new_form_state = state;
+			new_form_state.forEach((note) => {
+				if (note._id === action.word_id) note.forms.push(action.form);
+			})
+			return [...new_form_state];
 		default:
 			return state;
 	}

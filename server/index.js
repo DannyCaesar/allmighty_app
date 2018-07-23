@@ -53,7 +53,8 @@ app.get('/api/words', (req, res) => {
 })
 
 app.post('/api/words', (req, res) => {
-	req.body.groups = new objectId(req.body.groups);
+	if (req.body.groups !== undefined) req.body.groups = new objectId(req.body.groups);
+	else req.body.groups = [];
 	let word_id = '';
 
 	mongoClient.connect(mongo_port, (err, client) => {
@@ -67,9 +68,11 @@ app.post('/api/words', (req, res) => {
 		})
 		
 		p.then((word_id) => {
-			client.db(mongo_dictionary_db).collection("groups").update({_id: req.body.groups}, { $push: {words: word_id} }, (error, info) =>{
-				if (error) throw(error);
-			})
+			if (req.body.groups !== undefined) {
+				client.db(mongo_dictionary_db).collection("groups").update({_id: req.body.groups}, { $push: {words: word_id} }, (error, info) =>{
+					if (error) throw(error);
+				})
+			}
 
 			const data = {
 				word_id: word_id,
@@ -118,6 +121,15 @@ app.post('/api/words/edit/:id', (req, res) => {
 		mongoClient.connect(mongo_port, (err, client) => {
 			client.db(mongo_dictionary_db).collection("words").update({"_id": objectId(req.params.id)}, { $set: {"important": req.body.important } });
 			client.close();
+		})
+	}
+
+	if (req.body.form !== undefined) {
+		mongoClient.connect(mongo_port, (err, client) => {
+			client.db(mongo_dictionary_db).collection("words").update({"_id": objectId(req.params.id)}, { $push: {forms: req.body.form }}, (error) => {
+				if (error) console.log('Error adding form ' + error);
+				client.close();
+			})
 		})
 	}
 })
