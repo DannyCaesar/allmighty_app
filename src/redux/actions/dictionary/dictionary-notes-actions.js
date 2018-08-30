@@ -4,7 +4,11 @@ export const DICT_NOTES_TYPES = {
 	FETCH_NOTES_ERROR: 'FETCH_NOTES_ERROR',
 
 	ADD_NOTE: 'ADD_NOTE',
-	UPDATE_NOTE: 'UPDATE_NOTE',
+
+	UPDATE_NOTE_SAGA: 'UPDATE_NOTE_SAGA',
+	UPDATE_NOTE_SUCCESS: 'UPDATE_NOTE_SUCCESS',
+	UPDATE_NOTE_ERROR: 'UPDATE_NOTE_ERROR',
+
 	REMOVE_NOTE: 'REMOVE_NOTE',
 	UPDATE_NOTE_FORMS: 'UPDATE_NOTE_FORMS',
 	ADD_NOTE_FORM: 'ADD_NOTE_FORM'
@@ -40,12 +44,29 @@ export function onAddNote(note) {
 	}
 }
 
-export function onNoteUpdate(note){
+
+export function updateNoteSaga(note) {
 	return {
-		type: DICT_NOTES_TYPES.UPDATE_NOTE, 
+		type: DICT_NOTES_TYPES.UPDATE_NOTE_SAGA,
 		payload: note
 	}
 }
+
+export function updateNoteSuccess(note) {
+	return {
+		type: DICT_NOTES_TYPES.UPDATE_NOTE_SUCCESS,
+		payload: note
+	}
+}
+
+export function updateNoteError(error) {
+	return {
+		type: DICT_NOTES_TYPES.UPDATE_NOTE_ERROR,
+		payload: error
+	}
+}
+
+
 
 export function onRemoveNote(note){
 	return {

@@ -119,7 +119,11 @@ app.post('/api/words/edit/:id', (req, res) => {
 
 	if (req.body.important!==undefined) {
 		mongoClient.connect(mongo_port, (err, client) => {
-			client.db(mongo_dictionary_db).collection("words").update({"_id": objectId(req.params.id)}, { $set: {"important": req.body.important } });
+			client.db(mongo_dictionary_db).collection("words").update({"_id": objectId(req.params.id)}, { $set: {"important": req.body.important } }, (err, documents) => {
+				if (err) console.log(err);
+				else 
+					res.send('updated');
+			});
 			client.close();
 		})
 	}

@@ -1,8 +1,12 @@
 import React, { Component } from 'react';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import axios from 'axios';
 
 import LineSettingComponent from '../LineSettingComponent/LineSettingComponent';
+
+import { onRemoveNote, onNoteUpdate, updateNoteSaga } from '../../../redux/actions/dictionary/dictionary-notes-actions';
+import { onDeleteWordFromGroup } from '../../../redux/actions/dictionary/dictionary-groups-actions';
 
 import './line-styles.scss';
 
@@ -11,11 +15,6 @@ class LineComponent extends Component {
 	constructor(props){
 		super(props);
 		this.state = {
-			english: '',
-			german: '',
-			russian: '',
-			important: false,
-			groups: [],
 			edit: false,
 			editEnglish: false,
 			editGerman: false,
@@ -27,11 +26,13 @@ class LineComponent extends Component {
 		}
 	}
 
+	componentDidMount(){
+		this.setState({ hideEnglish: this.props.store.dictionary_hidden.english });
+		this.setState({ hideGerman: this.props.store.dictionary_hidden.german });
+		this.setState({ hideRussian: this.props.store.dictionary_hidden.russian });
+	}
+
 	componentWillReceiveProps(nextProps) {
-		if (this.props.groups !== nextProps.groups) this.setState({ groups: nextProps.groups });
-		if (this.props.english !== nextProps.english) this.setState({ english: nextProps.english });
-		if (this.props.german !== nextProps.german) this.setState({ german: nextProps.german });
-		if (this.props.russian !== nextProps.russian) this.setState({ russian: nextProps.russian });
 		if (this.props.store.dictionary_hidden !== nextProps.store.dictionary_hidden) {
 			if (nextProps.store.dictionary_hidden.english !== this.state.hideEnglish) this.setState({ hideEnglish: nextProps.store.dictionary_hidden.english})
 			if (nextProps.store.dictionary_hidden.german !== this.state.hideGerman) this.setState({ hideGerman: nextProps.store.dictionary_hidden.german})
@@ -39,39 +40,17 @@ class LineComponent extends Component {
 		}
 	}
 
-	componentDidMount(){
-		this.setState({ english: this.props.english });
-		this.setState({ german: this.props.german });
-		this.setState({ russian: this.props.russian });
-		this.setState({ important: this.props.important });
-		this.setState({ groups: this.props.groups });
-		this.setState({ hideEnglish: this.props.store.dictionary_hidden.english });
-		this.setState({ hideGerman: this.props.store.dictionary_hidden.german });
-		this.setState({ hideRussian: this.props.store.dictionary_hidden.russian });
-	}
-
-	shouldComponentUpdate(nextProps, nextState) {
-		/*return ( this.state.edit !== nextState.edit || this.state.editEnglish !== nextState.editEnglish ||
-			 	this.state.editGerman !== nextState.editGerman || this.state.editRussian !== nextState.editRussian ||
-			 	this.state.showSettings !== nextState.showSettings || this.state.english !== nextState.english)*/
-		return true;
-	}
 
 	remove = () => {
-		/*const data = {
-			english: this.state.english,
-			german: this.state.german,
-			russian: this.state.russian
-		}*/
 
-		axios.delete('/api/words/'+this.props.db_id)
+		axios.delete('/api/words/'+this.props.note._id)
 		.then(response => {
 			const thisGroup = this.props.store.dictionary_groups.filter((group) => group._id === this.props.groups)[0];
-			this.props.onDeleteWordFromGroup(thisGroup, this.props.db_id);
+			this.props.onDeleteWordFromGroup(thisGroup, this.props.note._id);
 		})
 		.catch(error => console.log(error));
 		
-		this.props.onRemoveNote(this.props.db_id);
+		this.props.onRemoveNote(this.props.note._id);
 	}
 
 	edit = () => {
@@ -131,12 +110,12 @@ class LineComponent extends Component {
 
 	submitChanges = () => {
 		const data = {
-			english: this.state.english,
-			german: this.state.german,
-			russian: this.state.russian
+			english: this.props.note.english,
+			german: this.props.note.german,
+			russian: this.props.note.russian
 		}
 
-		axios.post('/api/words/edit/'+this.props.db_id, data)
+		axios.post('/api/words/edit/'+this.props.note._id, data)
 		.catch(error => console.log(error));
 	}
 
@@ -152,21 +131,6 @@ class LineComponent extends Component {
 		this.setState({ important: value })
 	}
 
-	unimportant = () => {
-		this.setState({ important: false })
-		this.props.onNoteUpdate({id: this.props.db_id, important: false });
-
-		axios.post('/api/words/edit/'+this.props.db_id, {important: false })
-		.catch(error => console.log('error'));	
-	}
-
-	important = () => {
-		this.setState({ important: true })
-		this.props.onNoteUpdate({id: this.props.db_id, important: true });
-
-		axios.post('/api/words/edit/'+this.props.db_id, {important: true })
-		.catch(error => console.log(error));	
-	}
 
 	showEnglish = () => {
 		this.setState({ hideEnglish: false })
@@ -180,59 +144,77 @@ class LineComponent extends Component {
 		this.setState({ hideRussian: false })
 	}
 
+
+	getExclamationClasses = () => {
+		if (this.props.note.important) return "col-xs-1 line__status";
+		else return "col-xs-1 line__status_pale";
+	} 
+
+	changeImportance = () => {
+		this.props.updateNoteSaga(this.props.note);
+		this.props.onNoteUpdate({id: this.props.note._id, important: this.props.note.important });
+		axios.post('/api/words/edit/'+this.props.note._id, {important: this.props.note.important })
+		.catch(error => console.log(error));	
+	}
+
+	getLineClasses = () => {
+		if (this.props.note.important) return "col-xs-10 line__element line_important";
+		else return "col-xs-10 line__element";
+	}
+
 	render(){
-		if (this.state.important) {
+
 			return (
 				<div className="component">
 					<div className="line col-xs-12">
 
-						<div className="col-xs-1 line__status" onClick={this.unimportant}>
+						<div className={this.getExclamationClasses()} onClick={this.changeImportance}>
 							<span><i className="fas fa-exclamation"></i></span>
 						</div>
 
-						<div className="col-xs-10 line__element line_important">
+						<div className={this.getLineClasses()}>
 						
 						{!this.state.hideEnglish ?
 							this.state.editEnglish ?
 								<div className="line__item col-xs-4">
-									<div className="col-xs-11"><input type="text" placeholder="english" value={this.state.english} onChange={this.changeEnglish} onKeyDown={this.keySubmitEnglishChanges} /></div>
+									<div className="col-xs-11"><input type="text" placeholder="english" value={this.props.note.english} onChange={this.changeEnglish} onKeyDown={this.keySubmitEnglishChanges} /></div>
 									<div className="col-xs-1 btn_check" onClick={this.submitEnglishChanges}><i className="fas fa-check"></i></div>
 								</div>
 							:
-								<div className="col-xs-4 col-md-4 line__block" id={`${this.props.id}english`} onDoubleClick={this.editEnglish}>{this.state.english}</div>
-						: <div className="col-xs-4 col-md-4 line__block line__block_hidden" onClick={this.showEnglish}>{this.state.english}</div>
+								<div className="col-xs-4 col-md-4 line__block" id={`${this.props.id}english`} onDoubleClick={this.editEnglish}>{this.props.note.english}</div>
+						: <div className="col-xs-4 col-md-4 line__block line__block_hidden" onClick={this.showEnglish}>{this.props.note.english}</div>
 						}
 
 
 						{!this.state.hideGerman ? 
 							this.state.editGerman ? 
 								<div className="line__item col-xs-4">
-									<div className="col-xs-11"><input type="text" placeholder="german" value={this.state.german} onChange={this.changeGerman} onKeyDown={this.keySubmitGermanChanges} /></div>
+									<div className="col-xs-11"><input type="text" placeholder="german" value={this.props.note.german} onChange={this.changeGerman} onKeyDown={this.keySubmitGermanChanges} /></div>
 									<div className="col-xs-1 btn_check" onClick={this.submitGermanChanges}><i className="fas fa-check"></i></div>
 								</div>
 							: 
-								<div className="col-xs-4 col-md-4 line__block" id={this.props.id+"german"} onDoubleClick={this.editGerman}>{this.state.german}</div>
-						: <div className="col-xs-4 col-md-4 line__block line__block_hidden" onClick={this.showGerman}>{this.state.german}</div>
+								<div className="col-xs-4 col-md-4 line__block" id={this.props.id+"german"} onDoubleClick={this.editGerman}>{this.props.note.german}</div>
+						: <div className="col-xs-4 col-md-4 line__block line__block_hidden" onClick={this.showGerman}>{this.props.note.german}</div>
 						}
 						
 						{!this.state.hideRussian ? 
 							this.state.editRussian ? 
 								<div className="line__item col-xs-4">
-									<div className="col-xs-11"><input type="text" placeholder="russian" value={this.state.russian} onChange={this.changeRussian} onKeyDown={this.keySubmitRussianChanges} /></div>
+									<div className="col-xs-11"><input type="text" placeholder="russian" value={this.props.note.russian} onChange={this.changeRussian} onKeyDown={this.keySubmitRussianChanges} /></div>
 									<div className="col-xs-1 btn_check" onClick={this.submitRussianChanges}><i className="fas fa-check"></i></div>
 								</div>
 							:
-								<div className="col-xs-4 col-md-4 line__block" id={this.props.id+"russian"} onDoubleClick={this.editRussian}>{this.state.russian}</div>
-						: <div className="col-xs-4 col-md-4 line__block line__block_hidden" onClick={this.showRussian}>{this.state.russian}</div>
+								<div className="col-xs-4 col-md-4 line__block" id={this.props.id+"russian"} onDoubleClick={this.editRussian}>{this.props.note.russian}</div>
+						: <div className="col-xs-4 col-md-4 line__block line__block_hidden" onClick={this.showRussian}>{this.props.note.russian}</div>
 						}
 
 						{this.state.showSettings ? 
 							<LineSettingComponent 
-								db_id={this.props.db_id}
-								important={this.props.important}
-								comment={this.props.comment}
-								forms={this.props.forms}
-								groups={this.props.groups}
+								db_id={this.props.note._id}
+								important={this.props.note.important}
+								comment={this.props.note.comment}
+								forms={this.props.note.forms}
+								groups={this.props.note.groups}
 								onClose={this.close}
 								onSetImportance={this.setImportance}
 							/>
@@ -257,98 +239,21 @@ class LineComponent extends Component {
 				</div>
 			)
 
-		} else {
-			return (
-			
-					<div className="line col-xs-12">
-
-						<div className="col-xs-1 line__status_pale" onClick={this.important}>
-							<span><i className="fas fa-exclamation"></i></span>
-						</div>
-
-						<div className="col-xs-10 line__element">
-
-						{!this.state.hideEnglish ?
-							this.state.editEnglish ?
-								<div className="line__item col-xs-4">
-									<div className="col-xs-11"><input type="text" placeholder="english" value={this.state.english} onChange={this.changeEnglish} onKeyDown={this.keySubmitEnglishChanges} /></div>
-									<div className="col-xs-1 btn_check" onClick={this.submitEnglishChanges}><i className="fas fa-check"></i></div>
-								</div>
-							:
-								<div className="col-xs-4 col-md-4 line__block" id={`${this.props.id}english`} onDoubleClick={this.editEnglish}>{this.state.english}</div>
-						: <div className="col-xs-4 col-md-4 line__block line__block_hidden" onClick={this.showEnglish}>{this.state.english}</div>
-						}
-
-
-						{!this.state.hideGerman ?
-							this.state.editGerman ? 
-								<div className="line__item col-xs-4">
-									<div className="col-xs-11"><input type="text" placeholder="german" value={this.state.german} onChange={this.changeGerman} onKeyDown={this.keySubmitGermanChanges} /></div>
-									<div className="col-xs-1 btn_check" onClick={this.submitGermanChanges}><i className="fas fa-check"></i></div>
-								</div>
-							: 
-								<div className="col-xs-4 col-md-4 line__block" id={this.props.id+"german"} onDoubleClick={this.editGerman}>{this.state.german}</div>
-						: <div className="col-xs-4 col-md-4 line__block line__block_hidden" onClick={this.showGerman}>{this.state.german}</div>
-						}
-						
-
-						{!this.state.hideRussian ?
-							this.state.editRussian ? 
-								<div className="line__item col-xs-4">
-									<div className="col-xs-11"><input type="text" placeholder="russian" value={this.state.russian} onChange={this.changeRussian} onKeyDown={this.keySubmitRussianChanges} /></div>
-									<div className="col-xs-1 btn_check" onClick={this.submitRussianChanges}><i className="fas fa-check"></i></div>
-								</div>
-							:
-								<div className="col-xs-4 col-md-4 line__block" id={this.props.id+"russian"} onDoubleClick={this.editRussian}>{this.state.russian}</div>
-						: <div className="col-xs-4 col-md-4 line__block line__block_hidden" onClick={this.showRussian}>{this.state.russian}</div>
-						}
-
-						{this.state.showSettings ? 
-							<LineSettingComponent 
-								db_id={this.props.db_id}
-								important={this.props.important}
-								comment={this.props.comment}
-								forms={this.props.forms}
-								groups={this.props.groups}
-								onClose={this.close}
-								onSetImportance={this.setImportance}
-							/>
-						: null }
-						</div>
-
-						{!this.props.store.dictionary_elements_show ? 
-						<div className="col-xs-1">
-							{!this.state.edit ?
-								<div className="btn_line-edit col-xs-4 xs-hidden" onClick={this.edit}><i className="fas fa-pen"></i></div>
-							:
-								<div className="btn_line-check col-xs-4 xs-hidden" onClick={this.submitAllChanges}><i className="fas fa-check"></i></div>
-							}
-
-							<div className="btn_line-remove col-xs-4 xs-hidden" onClick={this.remove}><i className="fas fa-trash-alt"></i></div>
-
-							<div className="btn_line-settings col-xs-12 col-sm-4" onClick={this.showSettings}><i className="fas fa-cog"></i></div>
-						</div>
-						: null }
-					</div>
-				
-			)
-		}
 	}
+}
+
+function mapDispatchToProps(dispatch){
+	return bindActionCreators({
+		onRemoveNote: onRemoveNote,
+		onNoteUpdate: onNoteUpdate,
+		onDeleteWordFromGroup: onDeleteWordFromGroup,
+		updateNoteSaga: updateNoteSaga
+	}, dispatch)
 }
 
 export default connect(
 	state => ({
 		store: state
 	}),
-	dispatch => ({
-		onRemoveNote: (note) => {
-			dispatch({ type: "REMOVE_NOTE", payload: note });
-		},
-		onNoteUpdate: (note) => {
-			dispatch({ type: "UPDATE_NOTE", payload: note });
-		},
-		onDeleteWordFromGroup: (group, word_id) => {
-			dispatch({ type: "DELETE_WORD_FROM_GROUP", group: group, word_id: word_id });
-		}
-	})
+	mapDispatchToProps
 )(LineComponent);

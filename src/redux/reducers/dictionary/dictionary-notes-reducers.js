@@ -7,6 +7,7 @@ export default function dictionary_notes(state = [], action) {
 		case DICT_NOTES_TYPES.FETCH_NOTES_ERROR:
 			console.log('ERROR FETCHING NOTES: ' + action.payload); 
 			return state;
+		
 		case 'ADD_NOTE':
 			let ids = [];
 			state.forEach((item) => ids.push(item._id));
@@ -19,17 +20,23 @@ export default function dictionary_notes(state = [], action) {
 				note._id !== action.payload
 			)
 			return removedState;
-		case 'UPDATE_NOTE':
+
+		case DICT_NOTES_TYPES.UPDATE_NOTE_SUCCESS:
 			let important_state = state;
 			let important_note = state.filter((note) => 
-				note._id === action.payload.id
+				note._id === action.payload._id
 			)[0];
 			important_note.important = action.payload.important;
 
 			important_state.forEach((note, index) => {
-				if (note._id === action.payload.id) important_state.splice(index,1,important_note);
+				if (note._id === action.payload._id) important_state.splice(index,1,important_note);
 			})
 			return important_state;
+		case DICT_NOTES_TYPES.UPDATE_NOTE_ERROR:
+			console.log('ERROR UPDATING NOTE: ' + action.payload); 
+			return state;
+
+
 		case 'UPDATE_NOTE_FORMS':
 			let form_state = state;
 			let form_note = form_state.filter((note) => 
