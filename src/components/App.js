@@ -7,11 +7,12 @@ import '../css/app.scss';
 class App extends Component {
 
 	render(){
-		
 		return (
 			<div className="component component__app">
 				<div className="component__app menu">
-					<Link to="/dictionary"><div className="menu__button"></div></Link>
+					<Link to="/dictionary">
+						<div className="menu__button"></div>
+					</Link>
 				</div>
 			</div>
 		)

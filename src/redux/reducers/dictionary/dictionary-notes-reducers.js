@@ -1,6 +1,12 @@
+import { DICT_NOTES_TYPES } from '../../actions/dictionary/dictionary-notes-actions';
 
 export default function dictionary_notes(state = [], action) {
 	switch (action.type) {
+		case DICT_NOTES_TYPES.FETCH_NOTES_SUCCESS:
+			return action.payload;
+		case DICT_NOTES_TYPES.FETCH_NOTES_ERROR:
+			console.log('ERROR FETCHING NOTES: ' + action.payload); 
+			return state;
 		case 'ADD_NOTE':
 			let ids = [];
 			state.forEach((item) => ids.push(item._id));

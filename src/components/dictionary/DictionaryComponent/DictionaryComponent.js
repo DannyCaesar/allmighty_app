@@ -1,54 +1,39 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import axios from 'axios';
 
-import LineComponent from './LineComponent';
-import SettingsComponent from './SettingsComponent';
-import AddWordComponent from './AddWordComponent';
+import Logo from '../../general/Logo/Logo';
 
-import '../../css/dict.scss';
+import LineComponent from '../LineComponent/LineComponent';
+import SettingsComponent from '../SettingsComponent/SettingsComponent';
+import AddWordComponent from '../AddWordComponent/AddWordComponent';
+
+import { fetchNotesSaga } from '../../../redux/actions/dictionary/dictionary-notes-actions';
+import { onAddGroup, fetchGroupsSaga } from '../../../redux/actions/dictionary/dictionary-groups-actions';
+
+import './dictionary-styles.scss';
 
 class DictionaryComponent extends Component {
 	
 	constructor(props){
 		super(props);
 		this.state = {
-			showAdd: false,
-			showSettings: false,
-			selectedGroup: '',
-			formsCounter: ['form'],
-			showMessage: false
+			showAdd: false, //display AddWordComponent
+			showSettings: false, //display SettingsComponent
+			showMessage: false //display message
 		}
 	}
 
 	componentDidMount(){
-		axios.get('/api/words')
-		.then(response => {
-			const dataFetched = response.data;
-			dataFetched.forEach((item) => {
-				this.props.onAddNote(item)
-			})
-		})
-		.catch(error => {
-			console.log(error);
-		})
-
-		axios.get('/api/groups')
-		.then(response => {
-			const dataFetched = response.data;
-			dataFetched.forEach((item) => {
-				this.props.onAddGroup(item)
-			})
-		})
-		.catch(error => console.log(error))
-
+		this.props.fetchNotesSaga(); //fetch all notes
+		this.props.fetchGroupsSaga(); //fetch all groups
 	}
 
 
 	showAddWindow = () => {
 		this.setState({ showAdd: !this.state.showAdd })
-		this.setState({ formsCounter: [] });
 	}
 
 	showSettingsWindow = () => {
@@ -71,24 +56,27 @@ class DictionaryComponent extends Component {
 	render(){
 		
 		return (
-			<div className="component col-xs-12">
-				<Link to="/"><div className="component__logo"></div></Link>
-				<div className="btn__dict_container">
+			<div className="col-xs-12">
+				<div className="component">
+				<Logo link="/" />
+
+				<div className="dict__button-group">
 					{!this.state.showAdd ? 
-						<div className="btn btn__dict btn__dict_add" onClick={this.showAddWindow}><i className="fas fa-plus"></i></div>
+						<div className="custom-btn dict__btn dict__btn_add" onClick={this.showAddWindow}><i className="fas fa-plus"></i></div>
 					: 
-						<div className="btn btn__dict btn__dict_close" onClick={this.showAddWindow}><i className="fas fa-times"></i></div>
+						<div className="custom-btn dict__btn dict__btn_close" onClick={this.showAddWindow}><i className="fas fa-times"></i></div>
 					}
 
 					{!this.state.showSettings ? 
-						<div className="btn btn__dict btn__dict_settings" onClick={this.showSettingsWindow}><i className="fas fa-ellipsis-h"></i></div>
+						<div className="custom-btn dict__btn dict__btn_settings" onClick={this.showSettingsWindow}><i className="fas fa-ellipsis-h"></i></div>
 					: 
-						<div className="btn btn__dict btn__dict_close" onClick={this.showSettingsWindow}><i className="fas fa-times"></i></div>
+						<div className="custom-btn dict__btn dict__btn_close" onClick={this.showSettingsWindow}><i className="fas fa-times"></i></div>
 					}	
 				</div>
 
+
 				{this.state.showMessage ?
-					<div className="component__message col-xs-12">
+					<div className="dict__message col-xs-12">
 						<i className="fa fa-check-circle"></i>
 					</div>
 				: null }
@@ -105,7 +93,7 @@ class DictionaryComponent extends Component {
 					/>
 				: null }
 
-				<div className="line-container col-xs-10 col-xs-offset-1">
+				<div className="col-xs-10 col-xs-offset-1">
 					<div className="col-xs-12">
 						<div className="line__header col-xs-12">
 							<div className="col-xs-4 line__header_right">English</div>
@@ -119,33 +107,36 @@ class DictionaryComponent extends Component {
 					<LineComponent 
 						key={`line${index}`}
 						id={`line${index}`}
-						db_id={note._id}
+						note={note}
+						/*db_id={note._id}
 						english={note.english}
 						german={note.german}
 						russian={note.russian}
 						important={note.important}
 						groups={note.groups}
 						forms={note.forms}
-						comment={note.comment}
+						comment={note.comment}*/
 					/>
 				)}
+				</div>
 
 				<div className="author-footer col-xs-12">&#169; Denis Moroz, 2018</div>
+			
 			</div>
 		)
 	}
 } 
 
+function mapDispatchToProps(dispatch){
+	return bindActionCreators({
+		fetchNotesSaga: fetchNotesSaga,
+		fetchGroupsSaga: fetchGroupsSaga
+	}, dispatch);
+}
+
 export default connect(
 	state => ({
 		store: state
 	}),
-	dispatch => ({
-		onAddNote: (note) => {
-			dispatch({ type: 'ADD_NOTE', payload: note })
-		},
-		onAddGroup: (group) => {
-			dispatch({ type: 'ADD_GROUP', payload: group })
-		}
-	})
+	mapDispatchToProps
 )(DictionaryComponent);

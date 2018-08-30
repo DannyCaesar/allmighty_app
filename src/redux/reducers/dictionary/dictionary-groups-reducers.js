@@ -1,5 +1,12 @@
+import { DICT_GROUPS_TYPES } from '../../actions/dictionary/dictionary-groups-actions';
+
 export default function dictionary_groups(state = [], action) {
 	switch (action.type) {
+		case DICT_GROUPS_TYPES.FETCH_GROUPS_SUCCESS:
+			return action.payload;
+		case DICT_GROUPS_TYPES.FETCH_GROUPS_ERROR:
+			console.log('ERROR FETCHING GROUPS: ' + action.payload); 
+			return state;
 		case 'ADD_GROUP': 
 			return [...state, action.payload];
 		case 'UPDATE_GROUP':

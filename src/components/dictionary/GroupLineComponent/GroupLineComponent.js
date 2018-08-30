@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
 
-import '../../css/groupLineComponent.scss';
+import '../../../css/groupLineComponent.scss';
 
 class GroupLineComponent extends Component {
 

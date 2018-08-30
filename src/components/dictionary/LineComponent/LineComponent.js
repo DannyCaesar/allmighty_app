@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
 
-import '../../css/dict_line.scss';
+import LineSettingComponent from '../LineSettingComponent/LineSettingComponent';
 
-import LineSettingComponent from './LineSettingComponent';
+import './line-styles.scss';
 
 class LineComponent extends Component {
 	

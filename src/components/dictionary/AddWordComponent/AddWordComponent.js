@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
 
-import AddFormSimpleComponent from './AddFormSimpleComponent';
+import AddFormSimpleComponent from '../AddFormSimpleComponent/AddFormSimpleComponent';
 
-import '../../css/addWordComponent.scss';
+import '../../../css/addWordComponent.scss';
 
 class AppWordComponent extends Component {
 	

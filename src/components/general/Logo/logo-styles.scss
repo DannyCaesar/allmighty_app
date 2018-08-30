@@ -1,0 +1,23 @@
+@import '../../../css/global.scss';
+
+.logo__container {
+	width: 100px !important;
+	height: 100px !important;
+	margin: 30px auto 0 auto;
+}
+
+.logo {
+	cursor: pointer;
+	@include border-radius(50%);
+	@include setBackground(100px, 100px, url(../../../assets/logo.png));
+	&:hover {
+		animation: pulse 1s infinite 1s;
+		@include setBoxShadow(0 0 20px rgba(0,0,0,1));
+		@keyframes pulse {
+			0% { @include setBoxShadow(0 0 20px rgba(0,0,0,0.8)); }
+			50% { @include setBoxShadow(0 0 10px rgba(0,0,0,0.8)); }
+			100% { @include setBoxShadow(0 0 20px rgba(0,0,0,0.8)); }
+		}
+	}
+}
+

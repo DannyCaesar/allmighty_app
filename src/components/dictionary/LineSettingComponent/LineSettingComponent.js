@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import axios from 'axios';
 
-import AddFormSimpleComponent from './AddFormSimpleComponent';
-import '../../css/line_setting.scss';
+import AddFormSimpleComponent from '../AddFormSimpleComponent/AddFormSimpleComponent';
+import '../../../css/line_setting.scss';
 
 class LineSettingComponent extends Component {
 

@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 import axios from 'axios';
 import fs from 'fs';
 
-import '../../css/settingsComponent.scss';
-import GroupLineComponent from './GroupLineComponent';
+import '../../../css/settingsComponent.scss';
+import GroupLineComponent from '../GroupLineComponent/GroupLineComponent';
 
 
 class SettingsComponent extends Component {

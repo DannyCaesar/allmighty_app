@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Switch, Route } from 'react-router';
 
 import App from './App';
-import DictionaryComponent from './dictionary/DictionaryComponent';
+import DictionaryComponent from './dictionary/DictionaryComponent/DictionaryComponent';
 
 class RouterComponent extends Component {
 	render(){
