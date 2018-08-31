@@ -110,7 +110,19 @@ app.delete('/api/words/:id', (req, res) => {
 })
 
 app.post('/api/words/edit/:id', (req, res) => {
-	if (req.body.english!==undefined&&req.body.german!==undefined&&req.body.russian!==undefined) {
+	
+	const changeField = req.body.change;
+	const changeObject = {};
+	changeObject[changeField] = req.body.value;
+
+	mongoClient.connect(mongo_port, (err, client) => {
+		client.db(mongo_dictionary_db).collection("words").update({"_id": objectId(req.params.id)}, { $set: changeObject }, (err, client) => {
+			if (err) console.log(err);
+		})
+	})
+
+	res.send('changed');
+	/*if (req.body.english!==undefined&&req.body.german!==undefined&&req.body.russian!==undefined) {
 		mongoClient.connect(mongo_port, (err, client) => {
 			client.db(mongo_dictionary_db).collection("words").update({"_id": objectId(req.params.id)}, { $set: {"english": req.body.english, "german": req.body.german, "russian": req.body.russian } });
 			client.close();
@@ -135,7 +147,7 @@ app.post('/api/words/edit/:id', (req, res) => {
 				client.close();
 			})
 		})
-	}
+	}*/
 })
 	
 app.post('/api/loadWords', (req, res) => {
