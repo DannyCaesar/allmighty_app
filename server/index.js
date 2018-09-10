@@ -24,8 +24,53 @@ const sampleData = {
 	russian: "кошка"
 }
 
+
 app.get('/', (req, res) => {
-	res.json({message: 'Allmighty server'});
+	res.sendFile(path.join(__dirname, '../build/index.html'), (err) => {
+		if (err) console.log(err);
+	})
+})
+
+app.get('/home', (req, res) => {
+	res.sendFile(path.join(__dirname, '../build/index.html'), (err) => {
+		if (err) console.log(err);
+	})
+})
+
+//Registration
+app.post('/api/registration', (req, res) => {
+	const data = req.body.data; //name, surname, username, password
+	let user_id = '';
+	mongoClient.connect(mongo_port, (error, client) => {
+		if (error) { 
+			console.log("Connection error on /api/registration");
+			res.status(400).send();
+		}
+		client.db(mongo_dictionary_db).collection('users').insert(data, (error, users) => {
+			user_id = new objectId(users.insertedIds['0']);
+			if (error) console.log(error);
+		})
+	})
+})
+
+//Login
+app.post('/api/login', (req, res) => {
+	//const login = req.body.login;
+	//const password = req.body.password;
+	const login = 'DannyCaesar';
+	const password = '1234';
+	let user = null;
+	mongoClient.connect(mongo_port, (error, client) => {
+		if (error) { 
+			console.log("Connection error on /api/login");
+			res.status(400).send();
+		}
+		client.db(mongo_dictionary_db).collection('users').findOne({username: login, password: password}, (error, userInfo) => {
+			if (!user) console.log('No such user');
+			if (error) console.log(error);
+			user = userInfo;
+		})
+	})
 })
 
 app.get('/api', (req, res) => {

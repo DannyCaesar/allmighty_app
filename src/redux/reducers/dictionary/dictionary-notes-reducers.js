@@ -22,16 +22,24 @@ export default function dictionary_notes(state = [], action) {
 			return removedState;
 
 		case DICT_NOTES_TYPES.UPDATE_NOTE_SUCCESS:
-			let important_state = state;
-			let important_note = state.filter((note) => 
-				note._id === action.payload._id
-			)[0];
-			important_note.important = action.payload.important;
-
-			important_state.forEach((note, index) => {
-				if (note._id === action.payload._id) important_state.splice(index,1,important_note);
+			/* payload in the following structure:
+				{
+					change //which is changed field
+					value //new value
+					note //note which will be changed
+				}
+			*/
+			let changed_state_result = state;
+			const changed_field = action.payload.change;
+			const changed_note = action.payload.note;
+			const changed_value = action.payload.value;
+			const changed_state = state.filter((note) => note._id === changed_note._id)[0];
+			changed_state[changed_field] = changed_value; 
+			changed_state_result.forEach((item, index) => {
+				if (item._id === changed_state._id)
+					changed_state_result.splice(index,1,changed_state);
 			})
-			return important_state;
+			return [...changed_state_result];
 		case DICT_NOTES_TYPES.UPDATE_NOTE_ERROR:
 			console.log('ERROR UPDATING NOTE: ' + action.payload); 
 			return state;

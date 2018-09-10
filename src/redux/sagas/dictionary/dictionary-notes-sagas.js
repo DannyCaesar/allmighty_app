@@ -23,10 +23,8 @@ function* updateNote(action){
 	const method = "POST";
 	const url = "/api/words/edit/"+action.payload.note._id;
 	try {
-		yield put(updateNoteSuccess(action.payload.note));
-		//const result = yield call(axios, { method, url}, { important: action.payload.important });
+		yield put(updateNoteSuccess(action.payload));
 		const result = yield axios.post(url, action.payload);
-		console.log(result.data);
 	} catch (error) {
 		yield put(updateNoteError(error));
 	}

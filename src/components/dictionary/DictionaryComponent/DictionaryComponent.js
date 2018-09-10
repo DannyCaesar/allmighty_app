@@ -58,7 +58,7 @@ class DictionaryComponent extends Component {
 		return (
 			<div className="col-xs-12">
 				<div className="component">
-				<Logo link="/" />
+				<Logo link="/home" />
 
 				<div className="dict__button-group">
 					{!this.state.showAdd ? 

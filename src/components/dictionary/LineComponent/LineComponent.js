@@ -82,12 +82,6 @@ class LineComponent extends Component {
 			value: !this.props.note.important
 		};
 		this.props.updateNoteSaga(data);
-		//this.props.updateNoteSaga(this.props.note);
-
-
-		/*this.props.onNoteUpdate({id: this.props.note._id, important: this.props.note.important });
-		axios.post('/api/words/edit/'+this.props.note._id, {important: this.props.note.important })
-		.catch(error => console.log(error));	*/
 	}
 
 	getLineClasses = () => {
