@@ -3,8 +3,8 @@ const router = express.Router();
 const config = require('../../server.config.js');
 const objectId = require('mongodb').ObjectID;
 const mongoClient = require('mongodb').MongoClient;
-const jwt = require('jsonwebtoken');
-
+//const jwt = require('jsonwebtoken');
+const JWT = require('../../models/JWT')();
 
 //Registration
 router.post('/registration', (req, res) => {
@@ -38,10 +38,8 @@ router.post('/login', (req, res) => {
 			if (!user) res.send({ message: "No user with such login and password" });
 			if (error) console.log(error);
 			if (user) {
-				const token = jwt.sign({
-					data: 'foobar'
-				}, 'secret', { expiresIn: '1h' });
-
+				const token = JWT.sign();
+				
 				res.cookie('jwt', token, {
 					maxAge: config.jwt_expiration_time,
 					httpOnly: false

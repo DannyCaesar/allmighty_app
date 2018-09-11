@@ -34,7 +34,7 @@ $pale-green: #b2e4cd;
 }
 
 a {
-	text-decoration: none;
+	text-decoration: none !important;
 	cursor: default;
 }
 
@@ -42,6 +42,9 @@ i {
 	vertical-align: middle;
 }
 
+input {
+	outline: none;
+}
 
 div.row {
     margin-right: 0px;
@@ -140,7 +143,4 @@ div.col-xs-1,div.col-xs-10,div.col-xs-11,div.col-xs-12,div.col-xs-2,div.col-xs-3
 	align-items: center;
 	justify-content: center;
 }
-
-
-
 

@@ -40,7 +40,7 @@ class RegistrationComponent extends Component {
 				password: this.state.password
 			}
 
-			axios.post('/api/registration', {
+			axios.post('/auth/registration', {
 				data: data
 			});
 		}

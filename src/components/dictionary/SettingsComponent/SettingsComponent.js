@@ -45,7 +45,7 @@ class SettingsComponent extends Component {
 
 	load = () => {
 		const data = JSON.stringify(this.props.store.dictionary_notes);
-		axios.post('api/loadWords', {url: this.state.url})
+		axios.post('/api/words/loadWords', {url: this.state.url})
 		.then(response => {
 			this.setState({message: <div className="message_success" onClick={this.messageClose}>{response.data}</div> })
 		})

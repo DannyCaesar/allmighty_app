@@ -11,7 +11,7 @@ class RouterComponent extends Component {
 		return(
 			<div> 
 				<Switch>
-					<Route exact path="/" component={LoginComponent} />
+					<Route exact path="/" component={App} />
 					<Route path="/dictionary" component={DictionaryComponent} />
 					<Route exact path="/home" component={App} />
 					<Route exact path="/login" component={LoginComponent} />

@@ -1,0 +1,107 @@
+@import '../../../css/global.scss';
+
+
+.login-component {
+	width: 100%;
+	height: 100%;
+	position: fixed;
+	display: flex;
+	flex-flow: row wrap;
+	align-items: center;
+	align-content: center;
+	justify-content: center;
+	overflow: auto;
+}
+
+.login-component__logo_wrapper {
+	display: flex;
+	flex: 0 0 100%;
+	justify-content: center;
+	margin-bottom: 15px;
+}
+
+.login-component__logo {
+	margin-right: 5px;
+	@include setBackground(65px, 65px, url(../../../assets/logo.png));
+}
+
+.login-component__logo-char {
+	margin-left: 5px;
+	@include setBackground(300px, 75px, url(../../../assets/logo_char.png));
+	@media screen and (max-width: 390px) {
+		display: none;
+	}
+}
+
+.login-component__form {
+
+}
+
+.login-component__form-block {
+	display: flex;
+	margin: 5px 0;
+}
+
+.login-component__icon {
+	display: flex;
+	align-items: center;
+	height: 34px;
+	background-color: $grey;
+	padding: 0 10px 0 10px;
+	@include border-radius(10px 0 0 10px);
+}
+
+.login-component__input {
+	padding: 5px 0 5px 10px;
+	width: 100%;
+	border: 2px solid $grey;
+	@include border-radius(0 10px 10px 0);
+}
+
+.login-component__button {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 40px;
+	width: 40px;
+	font-size: 25px;
+	background-color: $grey;
+	margin: 0 auto;
+	cursor: pointer;
+	@include border-radius(50%);
+	@include transition(0.5s);
+	&:hover {
+		background-color: $red;
+	}
+}
+
+.login-component__form-footer {
+	text-align: center;
+	margin-top: 10px;
+	a {
+		color: $red;
+		cursor: pointer;
+		&:hover {
+			font-weight: bold;
+		}
+	}
+}
+
+.login-component__message-container {
+	display: flex;
+	width: 100%;
+	justify-content: center;
+	background-color: $red;
+	padding: 5px 0;
+	margin: 10px 0 0 0;
+	@include border-radius(10px);
+}
+
+.login-component__message {
+
+}
+
+.login-component__message_close {
+	padding-left: 10px;
+	cursor: pointer;
+}
