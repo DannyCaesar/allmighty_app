@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router';
 import { Link } from 'react-router-dom';
-import { connect } from 'react-redux';
 
 import LoginComponent from './login/LoginComponent/LoginComponent';
 
@@ -51,8 +50,4 @@ class App extends Component {
 	}
 }
 
-export default connect(
-	state => ({
-		store: state
-	})
-)(App);
+export default App;

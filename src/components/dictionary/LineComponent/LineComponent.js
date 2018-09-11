@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { PropTypes } from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import axios from 'axios';
@@ -6,55 +7,51 @@ import axios from 'axios';
 import LineSettingComponent from '../LineSettingComponent/LineSettingComponent';
 import LineElementComponent from '../LineElementComponent/LineElementComponent';
 
-import { onRemoveNote, onNoteUpdate, updateNoteSaga } from '../../../redux/actions/dictionary/dictionary-notes-actions';
+import { onNoteUpdate, updateNoteSaga, removeNoteSaga } from '../../../redux/actions/dictionary/dictionary-notes-actions';
 import { onDeleteWordFromGroup } from '../../../redux/actions/dictionary/dictionary-groups-actions';
+
+import { selectDictionaryElementsShow } from '../../../redux/selectors/dictionary-selectors';
 
 import './line-styles.scss';
 
+
+function mapDispatchToProps(dispatch) {
+	return bindActionCreators({
+		onDeleteWordFromGroup: onDeleteWordFromGroup,
+		updateNoteSaga: updateNoteSaga,
+		removeNoteSaga: removeNoteSaga
+	}, dispatch)
+}
+
+function mapStateToProps(state) {
+	return {
+		dictionary_elements_show: selectDictionaryElementsShow(state)
+	}
+}
+
 class LineComponent extends Component {
-	
+	static propTypes = {
+		note: PropTypes.object.isRequired,
+		removeNoteSaga: PropTypes.func.isRequired,
+		updateNoteSaga: PropTypes.func.isRequired,
+		dictionary_elements_show: PropTypes.bool.isRequired
+	}
+
 	constructor(props){
 		super(props);
 		this.state = {
 			edit: false,
-			editEnglish: false,
-			editGerman: false,
-			editRussian: false,
-			showSettings: false,
+			showSettings: false
 		}
 	}
 
-
 	remove = () => {
-
-		axios.delete('/api/words/'+this.props.note._id)
-		.then(response => {
-			const thisGroup = this.props.store.dictionary_groups.filter((group) => group._id === this.props.groups)[0];
-			this.props.onDeleteWordFromGroup(thisGroup, this.props.note._id);
-		})
-		.catch(error => console.log(error));
-		
-		this.props.onRemoveNote(this.props.note._id);
+		this.props.removeNoteSaga(this.props.note);
 	}
 
 	edit = () => {
-		this.setState({ edit: true });
-		this.setState({ editEnglish: true});
-		this.setState({ editGerman: true });
-		this.setState({ editRussian: true });
+		this.setState({ edit: !this.state.edit });
 	}
-
-	
-
-	submitAllChanges = () => {
-		this.submitChanges();
-		this.setState({ edit: false });
-		this.setState({ editEnglish: false });
-		this.setState({ editGerman: false });
-		this.setState({ editRussian: false });
-	}
-
-	
 
 	showSettings = () => {
 		this.setState({ showSettings: !this.state.showSettings })
@@ -68,13 +65,6 @@ class LineComponent extends Component {
 		this.setState({ important: value })
 	}
 
-
-
-	getExclamationClasses = () => {
-		if (this.props.note.important) return "col-xs-1 line__status";
-		else return "col-xs-1 line__status_pale";
-	} 
-
 	changeImportance = () => {
 		const data = {
 			note: this.props.note,
@@ -84,88 +74,73 @@ class LineComponent extends Component {
 		this.props.updateNoteSaga(data);
 	}
 
+	getExclamationClasses = () => {
+		if (this.props.note.important) return "col-xs-1 line__status";
+		else return "col-xs-1 line__status_pale";
+	} 
+
 	getLineClasses = () => {
 		if (this.props.note.important) return "col-xs-10 line__element line_important";
 		else return "col-xs-10 line__element";
 	}
 
 	render(){
-			return (
-				<div className="component">
-					<div className="line col-xs-12">
+		return (
+			<div className="component">
+				<div className="line col-xs-12">
 
-						
+					<div className={this.getExclamationClasses()} onClick={this.changeImportance}>
+						<span><i className="fas fa-exclamation"></i></span>
+					</div>
 
-						<div className={this.getExclamationClasses()} onClick={this.changeImportance}>
-							<span><i className="fas fa-exclamation"></i></span>
-						</div>
+					<div className={this.getLineClasses()}>
 
-						<div className={this.getLineClasses()}>
+						<LineElementComponent 
+							language="english"
+							value={this.props.note.english}
+							note={this.props.note}
+							edit={this.state.edit}
+						/>
 
-							<LineElementComponent 
-								language="english"
-								value={this.props.note.english}
+						<LineElementComponent 
+							language="german"
+							value={this.props.note.german}
+							note={this.props.note}
+							edit={this.state.edit}
+						/>
+
+						<LineElementComponent 
+							language="russian"
+							value={this.props.note.russian}
+							note={this.props.note}
+							edit={this.state.edit}
+						/>
+
+						{this.state.showSettings ? 
+							<LineSettingComponent 
+								note={this.props.note}
+								onClose={this.close}
+								onSetImportance={this.setImportance}
 							/>
-
-							<LineElementComponent 
-								language="german"
-								value={this.props.note.german}
-							/>
-
-							<LineElementComponent 
-								language="russian"
-								value={this.props.note.russian}
-							/>
-
-							
-
-							{this.state.showSettings ? 
-								<LineSettingComponent 
-									db_id={this.props.note._id}
-									important={this.props.note.important}
-									comment={this.props.note.comment}
-									forms={this.props.note.forms}
-									groups={this.props.note.groups}
-									onClose={this.close}
-									onSetImportance={this.setImportance}
-								/>
-							: null }
-
-						</div>
-
-						{!this.props.store.dictionary_elements_show ? 
-						<div className="col-xs-1">
-							{!this.state.edit ?
-								<div className="btn_line-edit col-xs-4 xs-hidden" onClick={this.edit}><i className="fas fa-pen"></i></div>
-							:
-								<div className="btn_line-check col-xs-4 xs-hidden" onClick={this.submitAllChanges}><i className="fas fa-check"></i></div>
-							}
-
-							<div className="btn_line-remove col-xs-4 xs-hidden" onClick={this.remove}><i className="fas fa-trash-alt"></i></div>
-
-							<div className="btn_line-settings col-xs-12 col-sm-4" onClick={this.showSettings}><i className="fas fa-cog"></i></div>
-						</div>
-						: null}
+						: null }
 
 					</div>
-				</div>
-			)
 
+					{!this.props.dictionary_elements_show ? 
+						<div className="col-xs-1">
+							<div className="btn_line-edit col-xs-4 xs-hidden" onClick={this.edit}><i className="fas fa-pen"></i></div>
+							<div className="btn_line-remove col-xs-4 xs-hidden" onClick={this.remove}><i className="fas fa-trash-alt"></i></div>
+							<div className="btn_line-settings col-xs-12 col-sm-4" onClick={this.showSettings}><i className="fas fa-cog"></i></div>
+						</div>
+					: null}
+
+				</div>
+			</div>
+		)
 	}
 }
 
-function mapDispatchToProps(dispatch){
-	return bindActionCreators({
-		onRemoveNote: onRemoveNote,
-		onNoteUpdate: onNoteUpdate,
-		onDeleteWordFromGroup: onDeleteWordFromGroup,
-		updateNoteSaga: updateNoteSaga
-	}, dispatch)
-}
-
 export default connect(
-	state => ({
-		store: state
-	}),
+	mapStateToProps,
 	mapDispatchToProps
 )(LineComponent);

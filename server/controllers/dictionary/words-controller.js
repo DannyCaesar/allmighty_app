@@ -15,9 +15,10 @@ router.get('/', (req, res) => {
 })
 
 router.post('/', (req, res) => {
-	if (req.body.groups !== undefined) req.body.groups = new objectId(req.body.groups);
+
+	/*if (req.body.groups !== undefined || req.body.groups !== '') req.body.groups = new objectId(req.body.groups);
 	else req.body.groups = [];
-	let word_id = '';
+	let word_id = '';*/
 
 	mongoClient.connect(config.mongo_port, (err, client) => {
 

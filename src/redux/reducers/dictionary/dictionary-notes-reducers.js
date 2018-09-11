@@ -7,28 +7,18 @@ export default function dictionary_notes(state = [], action) {
 		case DICT_NOTES_TYPES.FETCH_NOTES_ERROR:
 			console.log('ERROR FETCHING NOTES: ' + action.payload); 
 			return state;
-		
-		case 'ADD_NOTE':
+		case DICT_NOTES_TYPES.ADD_NOTE_SUCCESS:
 			let ids = [];
 			state.forEach((item) => ids.push(item._id));
 			if (!ids.includes(action.payload._id))
 				return [...state, action.payload];
 			else 
 				return state;
-		case 'REMOVE_NOTE': 
-			const removedState = state.filter((note, index) => 
-				note._id !== action.payload
-			)
-			return removedState;
-
+		case DICT_NOTES_TYPES.ADD_NOTE_ERROR:
+			console.log('ERROR ADDING NOTE: ' + action.payload);
+			return state;
 		case DICT_NOTES_TYPES.UPDATE_NOTE_SUCCESS:
-			/* payload in the following structure:
-				{
-					change //which is changed field
-					value //new value
-					note //note which will be changed
-				}
-			*/
+			/* payload in the following structure: { change , value , note } */
 			let changed_state_result = state;
 			const changed_field = action.payload.change;
 			const changed_note = action.payload.note;
@@ -42,6 +32,12 @@ export default function dictionary_notes(state = [], action) {
 			return [...changed_state_result];
 		case DICT_NOTES_TYPES.UPDATE_NOTE_ERROR:
 			console.log('ERROR UPDATING NOTE: ' + action.payload); 
+			return state;
+		case DICT_NOTES_TYPES.REMOVE_NOTE_SUCCESS: 
+			const removedState = state.filter((note, index) => note._id !== action.payload._id);
+			return [...removedState];
+		case DICT_NOTES_TYPES.REMOVE_NOTE_SUCCESS_ERROR:
+			console.log('ERROR REMOVING NOTE: ' + action.payload);
 			return state;
 
 

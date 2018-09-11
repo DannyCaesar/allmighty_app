@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
+import { PropTypes } from 'prop-types';
 import { Link } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import axios from 'axios';
 
 import Logo from '../../general/Logo/Logo';
-
 import LineComponent from '../LineComponent/LineComponent';
 import SettingsComponent from '../SettingsComponent/SettingsComponent';
 import AddWordComponent from '../AddWordComponent/AddWordComponent';
@@ -13,10 +12,30 @@ import AddWordComponent from '../AddWordComponent/AddWordComponent';
 import { fetchNotesSaga } from '../../../redux/actions/dictionary/dictionary-notes-actions';
 import { onAddGroup, fetchGroupsSaga } from '../../../redux/actions/dictionary/dictionary-groups-actions';
 
+import { selectDictionaryNotes } from '../../../redux/selectors/dictionary-selectors';
+
 import './dictionary-styles.scss';
 
+function mapStateToProps(state) {
+	return {
+		dictionary_notes: selectDictionaryNotes(state)
+	}
+}
+
+function mapDispatchToProps(dispatch){
+	return bindActionCreators({
+		fetchNotesSaga: fetchNotesSaga,
+		fetchGroupsSaga: fetchGroupsSaga
+	}, dispatch);
+}
+
 class DictionaryComponent extends Component {
-	
+	static propTypes = {
+		dictionary_notes: PropTypes.array.isRequired,
+		fetchNotesSaga: PropTypes.func.isRequired,
+		fetchGroupsSaga: PropTypes.func.isRequired
+	}
+
 	constructor(props){
 		super(props);
 		this.state = {
@@ -31,13 +50,8 @@ class DictionaryComponent extends Component {
 		this.props.fetchGroupsSaga(); //fetch all groups
 	}
 
-
 	showAddWindow = () => {
 		this.setState({ showAdd: !this.state.showAdd })
-	}
-
-	showSettingsWindow = () => {
-		this.setState({ showSettings: !this.state.showSettings })
 	}
 
 	closeAddWindow = (value) => {
@@ -48,6 +62,10 @@ class DictionaryComponent extends Component {
 			setTimeout(() => this.setState({ showMessage: false}), 2000);
 		}
 	}
+
+	showSettingsWindow = () => {
+		this.setState({ showSettings: !this.state.showSettings })
+	}	
 
 	closeSettingsWindow = (value) => {
 		this.setState({ showSettings: value })
@@ -103,19 +121,11 @@ class DictionaryComponent extends Component {
 					</div>
 				</div>
 				
-				{ this.props.store.dictionary_notes.map((note, index) => 
+				{ this.props.dictionary_notes.map((note, index) => 
 					<LineComponent 
 						key={`line${index}`}
 						id={`line${index}`}
 						note={note}
-						/*db_id={note._id}
-						english={note.english}
-						german={note.german}
-						russian={note.russian}
-						important={note.important}
-						groups={note.groups}
-						forms={note.forms}
-						comment={note.comment}*/
 					/>
 				)}
 				</div>
@@ -127,16 +137,7 @@ class DictionaryComponent extends Component {
 	}
 } 
 
-function mapDispatchToProps(dispatch){
-	return bindActionCreators({
-		fetchNotesSaga: fetchNotesSaga,
-		fetchGroupsSaga: fetchGroupsSaga
-	}, dispatch);
-}
-
 export default connect(
-	state => ({
-		store: state
-	}),
+	mapStateToProps,
 	mapDispatchToProps
 )(DictionaryComponent);

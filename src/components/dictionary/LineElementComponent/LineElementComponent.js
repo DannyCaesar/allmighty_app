@@ -1,8 +1,32 @@
 import React, { Component } from 'react';
+import { PropTypes } from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
+import { updateNoteSaga } from '../../../redux/actions/dictionary/dictionary-notes-actions';
+
+import { selectDictionaryHidden } from '../../../redux/selectors/dictionary-selectors';
+
+function mapStateToProps(state) {
+	return {
+		dictionary_hidden: selectDictionaryHidden(state)
+	}
+}
+
+function mapDispatchToProps(dispatch) {
+	return bindActionCreators({
+		updateNoteSaga: updateNoteSaga
+	}, dispatch)
+}
+
 class LineElementComponent extends Component {
+	static propTypes = {
+		language: PropTypes.string.isRequired,
+		value: PropTypes.string.isRequired,
+		note: PropTypes.object.isRequired,
+		edit: PropTypes.bool.isRequired,
+		dictionary_hidden: PropTypes.object.isRequired
+	}
 
 	constructor(){
 		super();
@@ -15,12 +39,15 @@ class LineElementComponent extends Component {
 
 	componentDidMount(){
 		this.setState({ text: this.props.value });
-		this.setState({ hide: this.props.store.dictionary_hidden[this.props.language] });
+		this.setState({ hide: this.props.dictionary_hidden[this.props.language] });
 	}
 
 	componentWillReceiveProps(nextProps){
-		if (this.props.store.dictionary_hidden !== nextProps.store.dictionary_hidden)
-			this.setState({ hide: nextProps.store.dictionary_hidden[this.props.language] });
+		if (this.props.dictionary_hidden !== nextProps.dictionary_hidden)
+			this.setState({ hide: nextProps.dictionary_hidden[this.props.language] });
+
+		if (this.props.edit !== nextProps.edit) 
+			this.setState({ edit: nextProps.edit });
 	}
 
 	editElement = () => { this.setState({ edit: true }) };
@@ -30,16 +57,13 @@ class LineElementComponent extends Component {
 	}
 
 	submitChanges = () => {
-		/*const data = {
-			english: this.props.note.english,
-			german: this.props.note.german,
-			russian: this.props.note.russian
-		}*/
+		const data = {
+			note: this.props.note,
+			change: this.props.language,
+			value: this.state.text
+		};
 
-		//axios.post('/api/words/edit/'+this.props.note._id, data)
-		//.catch(error => console.log(error));
-
-
+		this.props.updateNoteSaga(data);
 		this.setState({ edit: false });
 	}
 
@@ -74,7 +98,6 @@ class LineElementComponent extends Component {
 }
 
 export default connect(
-	state => ({
-		store: state
-	})
+	mapStateToProps,
+	mapDispatchToProps
 )(LineElementComponent);

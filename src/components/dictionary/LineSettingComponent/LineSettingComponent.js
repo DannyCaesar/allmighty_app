@@ -10,7 +10,7 @@ class LineSettingComponent extends Component {
 	constructor(props){
 		super(props);
 		this.state = {
-			importance: this.props.important,
+			importance: this.props.note.important,
 			comment: '',
 			forms: [],
 			showForms: false,
@@ -23,7 +23,7 @@ class LineSettingComponent extends Component {
 
 	componentDidMount(){
 		const word = this.props.store.dictionary_notes.filter((note) => 
-			note._id === this.props.db_id
+			note._id === this.props.note._id
 		)[0];
 		this.setState({ forms: word.forms })
 	}
@@ -31,25 +31,25 @@ class LineSettingComponent extends Component {
 	componentWillReceiveProps(nextProps) {
 		if (this.props.store.dictionary_notes !== nextProps.store.dictionary_notes) {
 			const word = nextProps.store.dictionary_notes.filter((note) => 
-				note._id === this.props.db_id
+				note._id === this.props.note._id
 			)[0];
 			this.setState({ forms: word.forms  })
 		}
 	}
 
 	shouldComponentUpdate(nextProps, nextState){
-		return this.state.importance !== nextState.importance || this.props.important !== nextProps.important ||
+		return this.state.importance !== nextState.importance || this.props.note.important !== nextProps.note.important ||
 			this.state.showForms !== nextState.showForms || this.state.showGroups !== nextState.showGroups ||
 			this.state.addForm !== nextState.addForm || this.state.forms !== nextState.forms;
 	}
 
 	importanceCheck = () => {
 		this.setState({ importance: !this.state.importance });
-		this.props.onNoteUpdate({id: this.props.db_id, important: !this.state.importance });
+		this.props.onNoteUpdate({id: this.props.note._id, important: !this.state.importance });
 
 		this.props.onSetImportance(!this.state.importance);
 
-		axios.post('/api/words/edit/'+this.props.db_id, {important: !this.state.importance})
+		axios.post('/api/words/edit/'+this.props.note._id, {important: !this.state.importance})
 		.catch(error => console.log(error));	
 	}
 
@@ -75,33 +75,33 @@ class LineSettingComponent extends Component {
 
 	deleteForm = (e) => {
 		const id = e.target.getAttribute('form_id');
-		axios.put('/api/forms/' + id, {word_id: this.props.db_id})
+		axios.put('/api/forms/' + id, {word_id: this.props.note._id})
 		.then(response => {
 			//console.log(response.data);
 		})
 		.catch(error => "Error deleting form: " + error);
 
-		this.props.onNoteFormUpdate(this.props.db_id, id);
+		this.props.onNoteFormUpdate(this.props.note._id, id);
 	}
 
 	remove = () => {
-		axios.delete('/api/words/'+this.props.db_id)
+		axios.delete('/api/words/'+this.props.note._id)
 		.then(response => {
-			const thisGroup = this.props.store.dictionary_groups.filter((group) => group._id === this.props.groups)[0];
-			this.props.onDeleteWordFromGroup(thisGroup, this.props.db_id);
+			const thisGroup = this.props.store.dictionary_groups.filter((group) => group._id === this.props.note.groups)[0];
+			this.props.onDeleteWordFromGroup(thisGroup, this.props.note._id);
 		})
 		.catch(error => console.log(error));
 		
-		this.props.onRemoveNote(this.props.db_id);
+		this.props.onRemoveNote(this.props.note._id);
 	}
 
 	addNewForm = (data) => {
-		const word_id = this.props.db_id;
+		const word_id = this.props.note._id;
 		const form = data.word;
 		this.props.onAddNoteForm(word_id, form);
 		this.setState({ addForm: false });
 
-		axios.post('/api/words/edit/'+this.props.db_id, { form: form })
+		axios.post('/api/words/edit/'+this.props.note._id, { form: form })
 		.catch(error => "Error on adding new form: " + error)
 	}
 
@@ -195,9 +195,9 @@ class LineSettingComponent extends Component {
 
 						{this.state.showGroups ? 
 							<div className="extension__groups-window">
-								{this.props.groups.length !== 0 ?
+								{this.props.note.groups.length !== 0 ?
 									<div className="group-block__list">
-										<div className="group-block">{this.getGroupName(this.props.groups)} <i className="fas fa-times"></i></div>
+										<div className="group-block">{this.getGroupName(this.props.note.groups)} <i className="fas fa-times"></i></div>
 									</div>
 								:
 									<div className="col-xs-12 optional-groups">
@@ -217,7 +217,7 @@ class LineSettingComponent extends Component {
 					</div>
 
 					<div className="col-xs-12">
-						<textarea className="form-control" placeholder="Комментарий" defaultValue={this.props.comment} onChange={this.setComment}></textarea>
+						<textarea className="form-control" placeholder="Комментарий" defaultValue={this.props.note.comment} onChange={this.setComment}></textarea>
 					</div>
 
 					<div className="col-xs-12">
