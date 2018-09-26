@@ -30,7 +30,6 @@ export function* watchFetchNotes(){
 // Add note
 function* addNote(action) {
 	const url = "/api/words";
-
 	try {
 		const result = yield axios.post(url, action.payload ); //get { word_id: '', group_id: '' }
 		const in_data = result.data;
@@ -38,20 +37,8 @@ function* addNote(action) {
 		const note_url = `/api/words/${in_data.word_id}`;
 		const group_url = `/api/groups/${in_data.group_id}`;
 
-		axios.get(note_url)
-		.then(res => put(addNoteSuccess(res.data)))
-		.catch(error => console.log(error))
-		/*try {
-		const note_result = yield call(axios, { in_method, note_url });
-		console.log(note_url);
-		} catch (error) {
-			console.log(error);
-		}*/
-		//yield put(addNoteSuccess(note_result.data));
-		
-		/*const group_result = yield call(axios, { in_method, group_url });
-		yield put(onUpdateGroup(group_result.data));*/
-
+		const result2 = yield axios.get(note_url);
+		yield put(addNoteSuccess(result2.data));
 	} catch (error) {
 		yield put(addNoteError(error));
 	}

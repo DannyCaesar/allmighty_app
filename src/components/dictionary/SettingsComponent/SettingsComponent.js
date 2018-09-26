@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import axios from 'axios';
 import fs from 'fs';
 
-import '../../../css/settingsComponent.scss';
+import './settings-styles.scss';
 import GroupLineComponent from '../GroupLineComponent/GroupLineComponent';
 
 

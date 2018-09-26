@@ -101,23 +101,8 @@ class AppWordComponent extends Component {
 			forms: forms,
 			groups: this.state.selectedGroup
 		}
-		this.props.addNoteSaga(data);
 
-		/*axios.post('/api/words', data)
-		.then((response) => {
-			const in_data = response.data;
-
-			axios.get('/api/words/'+ in_data.word_id)
-			.then(res => this.props.onAddNote(res.data))
-			.catch(error => console.log(error))
-
-			axios.get('/api/groups/' + in_data.group_id)
-			.then(res => this.props.onUpdateGroup(res.data))
-			.catch(error => console.log(error))
-		})
-		.catch(error => console.log(error))
-		*/
-		
+		this.props.addNoteSaga(data);	
 		this.props.close('added');
 	}
 
@@ -161,7 +146,7 @@ class AppWordComponent extends Component {
 
 						<div className="col-xs-12 optional-forms">
 							<div className="col-sm-4 col-xs-12 optional-forms__header">
-								<span onClick={this.addForm}><i className="fas fa-plus"></i> Добавить форму слова</span>
+								<span onClick={this.addForm}><i className="fas fa-plus"></i>Добавить форму слова</span>
 							</div>
 							<div className="clearfix"></div>
 							{this.state.formsCounter.map((form, index) => 

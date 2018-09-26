@@ -72,6 +72,7 @@ class LineComponent extends Component {
 			value: !this.props.note.important
 		};
 		this.props.updateNoteSaga(data);
+		this.setImportance(!this.state.important);
 	}
 
 	getExclamationClasses = () => {
