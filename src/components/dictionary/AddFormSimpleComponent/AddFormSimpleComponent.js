@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import '../../css/addFormSimpleComponent.scss';
+import '../../../css/addFormSimpleComponent.scss';
 
 class AddFormSimpleComponent extends Component {
 

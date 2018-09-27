@@ -34,7 +34,13 @@ module.exports = {
 		]
 	},
 	devServer: {
+		historyApiFallback: true,
+		contentBase: './',
 		proxy: {
+			'/auth': {
+				target: 'http://localhost:3000',
+				secure: false
+			},
 			'/api': {
 				target: 'http://localhost:3000',
 				secure: false

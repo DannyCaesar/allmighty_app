@@ -1,4 +1,14 @@
-@import 'global.scss';
+@import '../../../css/global.scss';
+
+@font-face {
+	font-family: 'Century Gothic Regular';
+	src: url('../../../assets/fonts/CenturyGothic.eot');
+	src: url('../../../assets/fonts/CenturyGothic.eot?#iefix') format('embedded-opentype'),
+	url('../../../assets/fonts/CenturyGothic.woff') format('woff'),
+	url('../../../assets/fonts/CenturyGothic.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
 
 .line-setting-component {
 	margin: 30px 0 0px 0;

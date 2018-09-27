@@ -1,0 +1,121 @@
+@import '../../../css/global.scss';
+
+@font-face {
+	font-family: 'Century Gothic Regular';
+	src: url('../../../assets/fonts/CenturyGothic.eot');
+	src: url('../../../assets/fonts/CenturyGothic.eot?#iefix') format('embedded-opentype'),
+	url('../../../assets/fonts/CenturyGothic.woff') format('woff'),
+	url('../../../assets/fonts/CenturyGothic.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
+
+* {
+	font-family: 'Century Gothic Regular';
+}
+
+
+
+.line {
+	text-align: center;
+	//height: 30px;
+	line-height: 30px;
+}
+
+.line__item {
+	input {
+		width: 90%;
+		text-align: center;
+		border: 1px solid $pale-grey;
+		@include border-radius(10px);
+		@include outline(none);
+		&:focus {
+			box-shadow: 0 0 3pt 2pt $grey;
+		}
+	}
+}
+
+.line__element {
+	&:hover {
+		background-color: $pale-grey;
+	}
+}
+
+.line__block {
+	white-space: nowrap;
+	overflow: auto;
+	//text-overflow: ellipsis;
+	height: 30px;
+
+	&::-webkit-scrollbar {
+	    height: 0px;
+	}
+}
+
+.line__block_hidden {
+	background-color: $grey;
+	color: $grey;
+	&:hover {
+		background-color: rgba(160,160,160,0.3);
+	}
+}
+
+.line_important {
+	background-color: $pale-orange;
+}
+
+.line__status {
+	color: $red;
+	&:hover {
+		cursor: pointer;
+	}
+}
+
+.line__status_pale {
+	color: $white;
+	&:hover {
+		cursor: pointer;
+		color: $grey;
+	}
+}
+
+
+.btn_line-edit {
+	color: $blue;
+	cursor: pointer;
+	&:hover {
+		color: lighten($blue, 10%);
+	}
+}
+
+.btn_line-check {
+	color: $green;
+	cursor: pointer;
+	&:hover {
+		color: lighten($green, 10%);
+	}
+}
+
+.btn_line-remove {
+	color: $red;
+	cursor: pointer;
+	&:hover {
+		color: lighten($red, 10%);
+	}
+}
+
+.btn_line-settings {
+	color: $grey;
+	cursor: pointer;
+	&:hover {
+		color: lighten($grey, 10%);
+	}
+}
+
+.btn_check {
+	cursor: pointer;
+	color: $green;
+	&:hover {
+		color: lighten($green, 10%);
+	}
+}

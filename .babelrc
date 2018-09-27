@@ -2,10 +2,12 @@
 	"presets": [
 		"es2015",
 		"env",
-		"react"
+		"react",
+		"stage-0"
 	],
 	"plugins": [
 		"transform-es2015-arrow-functions",
-		"transform-class-properties"
+		"transform-class-properties",
+		"transform-runtime"
 	]
 }
