@@ -50,10 +50,6 @@ export function addNoteSaga(note) {
 }
 
 export function addNoteSuccess(note) {
-	console.log({
-		type: DICT_NOTES_TYPES.ADD_NOTE_SUCCESS,
-		payload: note
-	});
 	return {
 		type: DICT_NOTES_TYPES.ADD_NOTE_SUCCESS,
 		payload: note

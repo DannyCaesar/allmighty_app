@@ -7,8 +7,12 @@ export default function dictionary_groups(state = [], action) {
 		case DICT_GROUPS_TYPES.FETCH_GROUPS_ERROR:
 			console.log('ERROR FETCHING GROUPS: ' + action.payload); 
 			return state;
-		case 'ADD_GROUP': 
+		case DICT_GROUPS_TYPES.ADD_GROUP_SUCCESS: 
+			console.log(action.payload);
 			return [...state, action.payload];
+		case DICT_GROUPS_TYPES.ADD_GROUP_ERROR:
+			console.log("ERROR ADDING GROUP: " + action.payload);
+			return state;
 		case 'UPDATE_GROUP':
 			const id = action.payload._id;
 			let new_state = state;

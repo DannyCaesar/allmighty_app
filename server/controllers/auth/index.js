@@ -38,8 +38,13 @@ router.post('/login', (req, res) => {
 			if (!user) res.send({ message: "No user with such login and password" });
 			if (error) console.log(error);
 			if (user) {
-				const token = JWT.sign();
-				
+				const data = {
+						_id: user._id,
+						name: user.name,
+						surname: user.surname,
+						username: user.username
+					};
+				const token = JWT.sign(data);
 				res.cookie('jwt', token, {
 					maxAge: config.jwt_expiration_time,
 					httpOnly: false

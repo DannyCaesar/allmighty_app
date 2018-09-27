@@ -3,11 +3,14 @@ const router = express.Router();
 const config = require('../../server.config.js');
 const objectId = require('mongodb').ObjectID;
 const mongoClient = require('mongodb').MongoClient;
+const JWT = require('../../models/JWT')();
+const cookieParser = require('cookie-parser');
 
 // Fetching all groups
 router.get('/', (req, res) => {
+	const jwtDecoded = JWT.verify(req.cookies.jwt).data;
 	mongoClient.connect(config.mongo_port, (err, client) => {
-		client.db(config.mongo_dictionary_db).collection("groups").find({}).toArray((err, groups) => {
+		client.db(config.mongo_dictionary_db).collection("groups").find({ user: new objectId(jwtDecoded._id) }).toArray((err, groups) => {
 			res.json(groups);
 		})
 	})
@@ -15,8 +18,12 @@ router.get('/', (req, res) => {
 
 
 router.post('/', (req, res) => {
+
+	const jwtDecoded = JWT.verify(req.cookies.jwt).data;
+	const userId = new objectId(jwtDecoded._id); //add user id to group data
+
 	const timestamp = new Date;
-	const data = { name: req.body.name, words: [], adddate: timestamp };
+	const data = { name: req.body.name, user: userId, words: [], adddate: timestamp };
 	if (data.name === "") res.send({ error: "Задайте название для группы"});
 	else {
 		mongoClient.connect(config.mongo_port, (err, client) => {

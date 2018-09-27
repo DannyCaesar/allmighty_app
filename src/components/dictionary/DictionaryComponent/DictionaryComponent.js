@@ -130,7 +130,7 @@ class DictionaryComponent extends Component {
 				)}
 				</div>
 
-				<div className="author-footer col-xs-12">&#169; Denis Moroz, 2018</div>
+				<div className="author-footer col-xs-12">&#169; Denis Moroz, { new Date().getFullYear() }</div>
 			
 			</div>
 		)

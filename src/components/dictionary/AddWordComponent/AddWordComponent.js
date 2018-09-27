@@ -165,7 +165,7 @@ class AppWordComponent extends Component {
 						</div>
 
 						<div className="add-note-window__btn">
-							<div className="btn btn__dict btn__dict_check" onClick={this.addNote}><i className="fas fa-check"></i></div>
+							<div className="custom-btn btn__dict btn__dict_check" onClick={this.addNote}><i className="fas fa-check"></i></div>
 						</div>
 
 					</div>

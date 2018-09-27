@@ -3,11 +3,16 @@ const router = express.Router();
 const config = require('../../server.config.js');
 const objectId = require('mongodb').ObjectID;
 const mongoClient = require('mongodb').MongoClient;
+const JWT = require('../../models/JWT')();
+const cookieParser = require('cookie-parser');
+
+router.use(cookieParser());
 
 // Fetch all words
 router.get('/', (req, res) => {
+	const jwtDecoded = JWT.verify(req.cookies.jwt).data;
 	mongoClient.connect(config.mongo_port, (err, client) => {
-			client.db(config.mongo_dictionary_db).collection("words").find({}).toArray((err,words) => {
+			client.db(config.mongo_dictionary_db).collection("words").find({ user: new objectId(jwtDecoded._id) }).toArray((err,words) => {
 				res.send(words);
 				client.close();
 		})
@@ -15,6 +20,9 @@ router.get('/', (req, res) => {
 })
 
 router.post('/', (req, res) => {
+
+	const jwtDecoded = JWT.verify(req.cookies.jwt).data;
+	req.body.user = new objectId(jwtDecoded._id); //add user id to word data
 
 	/*if (req.body.groups !== undefined || req.body.groups !== '') req.body.groups = new objectId(req.body.groups);
 	else req.body.groups = [];

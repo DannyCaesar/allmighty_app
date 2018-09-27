@@ -7,16 +7,16 @@ function JWT() {
 	return this;
 }
 
-function TokenSign(){
+function TokenSign(data){
 	return (
 		 jwt.sign({
-			data: 'foobar'
-			}, 'secret', { expiresIn: config.jwt_expiration_time })
+			data
+			}, config.jwt_secret, { expiresIn: config.jwt_expiration_time })
 		)
 }
 
-function TokenVerify(){
-	return 'verified';
+function TokenVerify(jwtCookie){
+	return jwt.verify(jwtCookie, config.jwt_secret)
 }
 
 

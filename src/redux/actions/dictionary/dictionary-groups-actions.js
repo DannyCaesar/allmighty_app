@@ -3,12 +3,16 @@ export const DICT_GROUPS_TYPES = {
 	FETCH_GROUPS_SUCCESS: 'FETCH_GROUPS_SUCCESS',
 	FETCH_GROUPS_ERROR: 'FETCH_GROUPS_ERROR',
 
-	ADD_GROUP: 'ADD_GROUP',
+	ADD_GROUP_SAGA: 'ADD_GROUP_SAGA',
+	ADD_GROUP_SUCCESS: 'ADD_GROUP_SUCCESS',
+	ADD_GROUP_ERROR: 'ADD_GROUP_ERROR',
+
 	UPDATE_GROUP: 'UPDATE_GROUP',
 	REMOVE_GROUP: 'REMOVE_GROUP',
 	DELETE_WORD_FROM_GROUP: 'DELETE_WORD_FROM_GROUP'
 }
 
+// Fetch groups
 export function fetchGroupsSaga(){
 	return {
 		type: DICT_GROUPS_TYPES.FETCH_GROUPS_SAGA
@@ -29,10 +33,25 @@ export function fetchGroupsError(error) {
 	}
 }
 
-export function onAddGroup(group) {
+// Add one group
+export function addGroupSaga(group) {
 	return { 
-		type: DICT_GROUPS_TYPES.ADD_GROUP, 
+		type: DICT_GROUPS_TYPES.ADD_GROUP_SAGA, 
 		payload: group 
+	}
+}
+
+export function addGroupSuccess(group) {
+	return {
+		type: DICT_GROUPS_TYPES.ADD_GROUP_SUCCESS,
+		payload: group
+	}
+}
+
+export function addGroupError(error) {
+	return {
+		type: DICT_GROUPS_TYPES.ADD_GROUP_ERROR,
+		payload: error
 	}
 }
 

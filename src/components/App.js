@@ -34,14 +34,22 @@ class App extends Component {
 		})*/
 	}
 
+	quit = () => {
+		others.deleteCookie('jwt');
+		location.reload();
+		this.setState({ redirect: true });
+	}
+
 	render(){
 		return (
 			<div className="component component__app">
 				<div className="component__app menu">
+					<div onClick={this.quit}>Exit</div>
 					<Link to="/dictionary">
 						<div className="menu__button"></div>
 					</Link>
 				</div>
+				
 				{this.state.redirect ?
 					<Redirect to="/login" />
 				: null }

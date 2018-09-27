@@ -4,6 +4,7 @@ $setting-height: 30px;
 
 .setting-window {
 	margin-top: 20px;
+	margin-bottom: 15px;
 }
 
 .setting-window__header {
@@ -136,10 +137,19 @@ $setting-height: 30px;
 	margin: 0 0 15px 0;
 }
 
+.btn__dict {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	cursor: pointer;
+	@include transition(0.5s);
+}
+
 .btn__dict_groups {
 	height: $setting-height !important;
 	width: $setting-height !important;
-	line-height: 12px !important;
+	background-color: $green;
+	color: $white;
 	@include border-radius(50% !important);
 }
 

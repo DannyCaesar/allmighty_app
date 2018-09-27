@@ -1,11 +1,49 @@
 import React, { Component } from 'react';
+import { PropTypes } from 'prop-types';
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import axios from 'axios';
 
 import AddFormSimpleComponent from '../AddFormSimpleComponent/AddFormSimpleComponent';
-import '../../../css/line_setting.scss';
+
+import { onNoteUpdate, onNoteFormUpdate, removeNoteSaga, onAddNoteForm } from '../../../redux/actions/dictionary/dictionary-notes-actions';
+import { onDeleteWordFromGroup } from '../../../redux/actions/dictionary/dictionary-groups-actions';
+
+import { selectDictionaryNotes, selectDictionaryGroups } from '../../../redux/selectors/dictionary-selectors';
+
+import './line-setting-styles.scss';
+
+
+function mapStateToProps(state) {
+	return {
+		dictionary_notes: selectDictionaryNotes(state),
+		dictionary_groups: selectDictionaryGroups(state)
+	}
+}
+
+function mapDispatchToProps(dispatch){
+	return bindActionCreators({
+		onNoteUpdate: onNoteUpdate,
+		onNoteFormUpdate: onNoteFormUpdate,
+		removeNoteSaga: removeNoteSaga,
+		onAddNoteForm: onAddNoteForm,
+		onDeleteWordFromGroup: onDeleteWordFromGroup,
+	}, dispatch)
+}
 
 class LineSettingComponent extends Component {
+	static propTypes = {
+		note: PropTypes.object.isRequired,
+		onClose: PropTypes.func.isRequired,
+		onSetImportance: PropTypes.func.isRequired,
+		dictionary_notes: PropTypes.array.isRequired,
+		dictionary_groups: PropTypes.array.isRequired,
+		onNoteUpdate: PropTypes.func,
+		onNoteFormUpdate: PropTypes.func.isRequired,
+		removeNoteSaga: PropTypes.func.isRequired,
+		onAddNoteForm: PropTypes.func.isRequired,
+		onDeleteWordFromGroup: PropTypes.func.isRequired
+	}
 
 	constructor(props){
 		super(props);
@@ -22,15 +60,15 @@ class LineSettingComponent extends Component {
 	}
 
 	componentDidMount(){
-		const word = this.props.store.dictionary_notes.filter((note) => 
+		const word = this.props.dictionary_notes.filter((note) => 
 			note._id === this.props.note._id
 		)[0];
 		this.setState({ forms: word.forms })
 	}
 
 	componentWillReceiveProps(nextProps) {
-		if (this.props.store.dictionary_notes !== nextProps.store.dictionary_notes) {
-			const word = nextProps.store.dictionary_notes.filter((note) => 
+		if (this.props.dictionary_notes !== nextProps.dictionary_notes) {
+			const word = nextProps.dictionary_notes.filter((note) => 
 				note._id === this.props.note._id
 			)[0];
 			this.setState({ forms: word.forms  })
@@ -85,14 +123,7 @@ class LineSettingComponent extends Component {
 	}
 
 	remove = () => {
-		axios.delete('/api/words/'+this.props.note._id)
-		.then(response => {
-			const thisGroup = this.props.store.dictionary_groups.filter((group) => group._id === this.props.note.groups)[0];
-			this.props.onDeleteWordFromGroup(thisGroup, this.props.note._id);
-		})
-		.catch(error => console.log(error));
-		
-		this.props.onRemoveNote(this.props.note._id);
+		this.props.removeNoteSaga(this.props.note);
 	}
 
 	addNewForm = (data) => {
@@ -106,7 +137,7 @@ class LineSettingComponent extends Component {
 	}
 
 	getGroupName = (id) => {
-		const group = this.props.store.dictionary_groups.filter((group) => group._id === id)[0];
+		const group = this.props.dictionary_groups.filter((group) => group._id === id)[0];
 		return group.name;
 	}
 
@@ -205,7 +236,7 @@ class LineSettingComponent extends Component {
 										<div className="col-xs-8">
 											<select className="form-control setting-edit-window__selector" defaultValue="" onChange={this.chooseGroup}>
 												<option disabled value="">Выберите группу</option>
-												{this.props.store.dictionary_groups.map((group, index) => 
+												{this.props.dictionary_groups.map((group, index) => 
 													<option key={"group"+index} value={group.name}>{group.name}</option>
 												)}
 											</select>
@@ -229,25 +260,9 @@ class LineSettingComponent extends Component {
 	}
 }
 
+
+
 export default connect (
-	state => ({
-		store: state
-	}),
-	dispatch => ({
-		onNoteUpdate: (note) => {
-			dispatch({ type: "UPDATE_NOTE", payload: note });
-		},
-		onNoteFormUpdate: (word_id, form_id) => {
-			dispatch({ type: "UPDATE_NOTE_FORMS", word_id: word_id, form_id: form_id })
-		},
-		onDeleteWordFromGroup: (group, word_id) => {
-			dispatch({ type: "DELETE_WORD_FROM_GROUP", group: group, word_id: word_id });
-		},
-		onRemoveNote: (note) => {
-			dispatch({ type: "REMOVE_NOTE", payload: note });
-		},
-		onAddNoteForm: (word_id, form) => {
-			dispatch({ type: 'ADD_NOTE_FORM', word_id: word_id, form: form })
-		}
-	})
+	mapStateToProps,
+	mapDispatchToProps
 )(LineSettingComponent);
