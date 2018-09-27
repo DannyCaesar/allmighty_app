@@ -3,10 +3,11 @@ import { PropTypes } from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import axios from 'axios';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import AddFormSimpleComponent from '../AddFormSimpleComponent/AddFormSimpleComponent';
 
-import { onNoteUpdate, onNoteFormUpdate, removeNoteSaga, onAddNoteForm } from '../../../redux/actions/dictionary/dictionary-notes-actions';
+import { updateNoteSaga, onNoteFormUpdate, removeNoteSaga, onAddNoteForm } from '../../../redux/actions/dictionary/dictionary-notes-actions';
 import { onDeleteWordFromGroup } from '../../../redux/actions/dictionary/dictionary-groups-actions';
 
 import { selectDictionaryNotes, selectDictionaryGroups } from '../../../redux/selectors/dictionary-selectors';
@@ -23,7 +24,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch){
 	return bindActionCreators({
-		onNoteUpdate: onNoteUpdate,
+		updateNoteSaga: updateNoteSaga,
 		onNoteFormUpdate: onNoteFormUpdate,
 		removeNoteSaga: removeNoteSaga,
 		onAddNoteForm: onAddNoteForm,
@@ -38,7 +39,7 @@ class LineSettingComponent extends Component {
 		onSetImportance: PropTypes.func.isRequired,
 		dictionary_notes: PropTypes.array.isRequired,
 		dictionary_groups: PropTypes.array.isRequired,
-		onNoteUpdate: PropTypes.func,
+		updateNoteSaga: PropTypes.func,
 		onNoteFormUpdate: PropTypes.func.isRequired,
 		removeNoteSaga: PropTypes.func.isRequired,
 		onAddNoteForm: PropTypes.func.isRequired,
@@ -81,31 +82,20 @@ class LineSettingComponent extends Component {
 			this.state.addForm !== nextState.addForm || this.state.forms !== nextState.forms;
 	}
 
+	close = () => { this.props.onClose(false); }
+
+	showForms = () => { this.setState({ showForms: !this.state.showForms }); }
+	showGroups = () => { this.setState({ showGroups: !this.state.showGroups }); }
+
+	setComment = (e) => { this.setState({ comment: e.target.value }); }
+
 	importanceCheck = () => {
 		this.setState({ importance: !this.state.importance });
-		this.props.onNoteUpdate({id: this.props.note._id, important: !this.state.importance });
-
-		this.props.onSetImportance(!this.state.importance);
-
-		axios.post('/api/words/edit/'+this.props.note._id, {important: !this.state.importance})
-		.catch(error => console.log(error));	
+		const update = { change: "important", value: !this.state.importance, note: this.props.note };
+		this.props.updateNoteSaga(update);
+		this.props.onSetImportance(!this.state.importance); // change color in LineComponent
 	}
 
-	close = () => {
-		this.props.onClose(false);
-	}
-
-	setComment = (e) => {
-		this.setState({ comment: e.target.value })
-	}
-
-	showForms = () => {
-		this.setState({ showForms: !this.state.showForms })
-	}
-
-	showGroups = () => {
-		this.setState({ showGroups: !this.state.showGroups })
-	}
 
 	addForm = () => {
 		this.setState({ addForm: !this.state.addForm })
@@ -144,26 +134,26 @@ class LineSettingComponent extends Component {
 	render(){
 		return (
 			<div className="line-setting-component">
-				<div className="line-setting-component__header">Дополнительные настройки <i className="fas fa-times" onClick={this.close}></i></div>
+				<div className="line-setting-component__header">Additional settings <FontAwesomeIcon icon="times" onClick={this.close} /></div>
 				<div className="line-setting-component__body col-xs-12">
 					{!this.state.importance ? 
 						<div className="line__btn line__btn_unimportant col-xs-12 col-sm-4" onClick={this.importanceCheck}>
-							Пометить, как важное
+							Mark as important
 						</div>
 					: 
 						<div className="line__btn line__btn_important col-xs-12 col-sm-4" onClick={this.importanceCheck}>
-							Пометить, как неважное
+							Mark as unimporatant
 						</div>
 					}
 
 
 					{this.state.showForms ? 
 						<div className="line__btn line__btn_active col-xs-12 col-sm-4" onClick={this.showForms}>
-							<i className="fas fa-times"></i>
+							<FontAwesomeIcon icon="times" />
 						</div>
 					:
 						<div className="line__btn col-xs-12 col-sm-4" onClick={this.showForms}>
-							<i className="fas fa-angle-down toLeft xs-only"></i> Формы слова
+							Word forms
 						</div>
 					}
 
@@ -173,7 +163,7 @@ class LineSettingComponent extends Component {
 						</div>
 					: 
 						<div className="line__btn col-xs-12 col-sm-4" onClick={this.showGroups}>
-							<i className="fas fa-angle-down toLeft xs-only"></i> Группы
+							<i className="fas fa-angle-down toLeft xs-only"></i> Groups
 						</div>
 					}
 
@@ -182,9 +172,9 @@ class LineSettingComponent extends Component {
 							<div className="extension__forms-window col-xs-12">
 
 								{!this.state.addForm ?
-									<div onClick={this.addForm} className="form-btn_add">Добавить форму <i className="fas fa-plus"></i></div>
+									<div onClick={this.addForm} className="form-btn_add">Add new form <i className="fas fa-plus"></i></div>
 								:
-									<div onClick={this.addForm} className="form-btn_add">Отменить <i className="fas fa-times"></i></div>
+									<div onClick={this.addForm} className="form-btn_add">Cancel <i className="fas fa-times"></i></div>
 								}
 
 							{this.state.forms !== undefined ? 
@@ -211,7 +201,7 @@ class LineSettingComponent extends Component {
 									</div>
 									)
 							:
-								<div>Нет форм</div>
+								<div>No forms</div>
 							}
 
 								{this.state.addForm ?
@@ -232,10 +222,10 @@ class LineSettingComponent extends Component {
 									</div>
 								:
 									<div className="col-xs-12 optional-groups">
-										<span className="col-xs-4">Группа</span>
+										<span className="col-xs-4">Group</span>
 										<div className="col-xs-8">
 											<select className="form-control setting-edit-window__selector" defaultValue="" onChange={this.chooseGroup}>
-												<option disabled value="">Выберите группу</option>
+												<option disabled value="">Choose group</option>
 												{this.props.dictionary_groups.map((group, index) => 
 													<option key={"group"+index} value={group.name}>{group.name}</option>
 												)}
@@ -248,11 +238,11 @@ class LineSettingComponent extends Component {
 					</div>
 
 					<div className="col-xs-12">
-						<textarea className="form-control" placeholder="Комментарий" defaultValue={this.props.note.comment} onChange={this.setComment}></textarea>
+						<textarea className="form-control" placeholder="Comment" defaultValue={this.props.note.comment} onChange={this.setComment}></textarea>
 					</div>
 
 					<div className="col-xs-12">
-						<div className="form-line__btn_delete" onClick={this.remove}>Удалить запись</div>
+						<div className="form-line__btn_delete" onClick={this.remove}>Delete</div>
 					</div>
 				</div>
 			</div>

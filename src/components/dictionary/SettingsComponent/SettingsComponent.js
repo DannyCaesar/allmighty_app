@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import axios from 'axios';
 import fs from 'fs';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import GroupLineComponent from '../GroupLineComponent/GroupLineComponent';
 

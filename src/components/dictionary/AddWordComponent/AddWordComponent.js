@@ -99,7 +99,7 @@ class AppWordComponent extends Component {
 			important: false,
 			comment: this.state.comment,
 			forms: forms,
-			groups: this.state.selectedGroup
+			groups: this.state.selectedGroup._id
 		}
 
 		this.props.addNoteSaga(data);	

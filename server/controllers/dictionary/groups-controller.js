@@ -11,7 +11,26 @@ router.get('/', (req, res) => {
 	const jwtDecoded = JWT.verify(req.cookies.jwt).data;
 	mongoClient.connect(config.mongo_port, (err, client) => {
 		client.db(config.mongo_dictionary_db).collection("groups").find({ user: new objectId(jwtDecoded._id) }).toArray((err, groups) => {
-			res.json(groups);
+			
+			// Getting groups and words in group
+			client.db(config.mongo_dictionary_db).collection("words").find({}).toArray((error, words) => {
+				let result = groups;
+				let buffer = [];
+				result.forEach((group,index) => {
+					words.forEach((word) => {
+
+						group.words.forEach(w => {
+							if (w.toString() == word._id.toString()) 
+								buffer.push(word);
+						});
+
+					})
+					result[index].words = buffer;
+				})
+				res.json(result);
+			})
+
+			
 		})
 	})
 })

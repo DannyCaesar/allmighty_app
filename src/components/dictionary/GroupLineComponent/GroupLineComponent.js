@@ -36,7 +36,8 @@ class GroupLineComponent extends Component {
 	constructor(){
 		super();
 		this.state = {
-			showWords: false
+			showWords: false,
+			editGroup: false
 		}
 	}
 
@@ -62,11 +63,6 @@ class GroupLineComponent extends Component {
 		this.setState({ showWords: !this.state.showWords });
 	}
 
-	getWord = (word) => {
-		const thisWord = this.props.dictionary_notes.filter((elem) => elem._id === word)[0];
-		return thisWord;
-	}
-
 	removeWord = (e) => {
 		const word_id = e.target.getAttribute('word_id');
 		const group_id = this.props.group._id;
@@ -78,8 +74,11 @@ class GroupLineComponent extends Component {
 		this.setState({ showWords: false }) //this is extra code for rerendering
 	}
 
+	editGroup = () => {
+		this.setState({ editGroup: !this.state.editGroup });
+	}
+
 	render(){
-		
 		return (
 			<div className="group-line">
 				<div className="group-line__header col-xs-11 col-xs-offset-1">
@@ -89,7 +88,7 @@ class GroupLineComponent extends Component {
 				</div>
 
 				<div className="group-line__body col-xs-12">
-					<div className="custom-btn group-line__btn group-line__btn_edit col-xs-1" data-toggle="tooltip" title="Edit group"><i className="fas fa-pen"></i></div>
+					<div className="custom-btn group-line__btn group-line__btn_edit col-xs-1" data-toggle="tooltip" title="Edit group" onClick={this.editGroup}><i className="fas fa-pen"></i></div>
 					<div className="col-xs-11">
 						<div className="col-xs-4">{this.props.group.name}</div>
 						<div className="col-xs-4">{this.parseDate(this.props.group.adddate)}</div>
@@ -102,8 +101,8 @@ class GroupLineComponent extends Component {
 					<div className="col-xs-12 group-line__words">
 						{this.props.group.words.map((word, index) => 
 							<div key={`word${index}`} className="words__elem_container">
-								<span className="words__elem" data-toggle="tooltip" title={`English: ${this.getWord(word).english}, german: ${this.getWord(word).german}, russian: ${this.getWord(word).russian}`}>
-									{this.getWord(word).english}
+								<span className="words__elem" data-toggle="tooltip" title={`English: ${word.english}, german: ${word.german}, russian: ${word.russian}`}>
+									{word.english}
 									<i className="fas fa-times" word_id={word} onClick={this.removeWord}></i>
 								</span>
 							</div>

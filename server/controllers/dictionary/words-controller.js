@@ -38,9 +38,11 @@ router.post('/', (req, res) => {
 			});
 		})
 		
+
 		p.then((word_id) => {
+			// if word's data has group info
 			if (req.body.groups !== undefined) {
-				client.db(config.mongo_dictionary_db).collection("groups").update({_id: req.body.groups}, { $push: {words: word_id} }, (error, info) =>{
+				client.db(config.mongo_dictionary_db).collection("groups").update({_id: new objectId(req.body.groups) }, { $push: {words: new objectId(word_id) } }, (error, info) =>{
 					if (error) throw(error);
 				})
 			}

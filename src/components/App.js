@@ -1,6 +1,11 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router';
 import { Link } from 'react-router-dom';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTimes, faCheck, faDownload, faPen, faPlus, faMinus, faTrashAlt, faEllipsisH, faAngleDown, faAngleUp } from '@fortawesome/free-solid-svg-icons';
+
+library.add(faTimes, faCheck, faDownload, faPen, faPlus, faMinus, faTrashAlt, faEllipsisH, faAngleDown, faAngleUp);
 
 import LoginComponent from './login/LoginComponent/LoginComponent';
 
