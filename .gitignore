@@ -1,7 +1,2 @@
-.DS_Store
-*.log
-*.lock
+
 node_modules/
-build/
-.env
-package-lock.json
