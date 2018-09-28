@@ -9,8 +9,8 @@
     "build": "webpack --mode production",
     "server": "nodemon server/index.js",
     "server_node": "node server/index.js",
-    "start-no": "npm-run-all -p server webpack_dev",
-    "start": "node server/index.js",
+    "start": "npm-run-all -p server webpack_dev",
+    "start-heroku": "node server/index.js",
     "test": "jest --watch"
   },
   "jest": {

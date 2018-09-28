@@ -17,11 +17,11 @@ router.get('/', (req, res) => {
 	})
 })
 
-router.get('/home', (req, res) => {
+/*router.get('/home', (req, res) => {
 	res.sendFile(path.join(__dirname, '../../build/index.html'), (err) => {
 		if (err) console.log(err);
 	})
-})
+})*/
 
 router.get('*', (req,res) =>{
     res.sendFile(path.join(__dirname, '../../build/index.html'), (err) => {
